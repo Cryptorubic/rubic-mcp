@@ -1,0 +1,12 @@
+services:
+  rubic-public-mcp:
+    build: .
+    environment:
+      RUBIC_API_BASE_URL: ${RUBIC_API_BASE_URL:-https://rubic-api-v2.rubic.exchange}
+      RUBIC_API_TIMEOUT_MS: ${RUBIC_API_TIMEOUT_MS:-60000}
+      MCP_TOOL_TIMEOUT_MS: ${MCP_TOOL_TIMEOUT_MS:-60000}
+      MCP_TRANSPORT: ${MCP_TRANSPORT:-http}
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: ${MCP_PORT:-3333}
+    ports:
+      - "${MCP_PORT:-3333}:${MCP_PORT:-3333}"

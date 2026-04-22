@@ -1,0 +1,42 @@
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+import { RubicApiClient } from './api/rubic-api-client.js';
+import { config } from './config.js';
+import { startHttpServer } from './http-server.js';
+import { McpServerFactory } from './mcp-server.factory.js';
+import { McpErrorMapper } from './shared/error-mapper.js';
+import { McpValidationService } from './shared/validation.service.js';
+import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
+import { TrackStatusTool } from './tools/track-status.tool.js';
+
+const createFactory = (): McpServerFactory => {
+    const errorMapper = new McpErrorMapper();
+    const validationService = new McpValidationService();
+    const apiClient = new RubicApiClient(config.apiBaseUrl, config.apiTimeoutMs);
+
+    const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
+    const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService);
+    const trackStatusTool = new TrackStatusTool(errorMapper, apiClient, validationService);
+
+    return new McpServerFactory(buildSwapTxTool, quoteRoutesTool, trackStatusTool, config.toolTimeoutMs);
+};
+
+async function start(): Promise<void> {
+    const factory = createFactory();
+
+    if (config.transport === 'http') {
+        await startHttpServer(factory, config.host, config.port);
+        return;
+    }
+
+    const server = factory.createServer();
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error('Rubic MCP server is running over stdio.');
+}
+
+start().catch((error) => {
+    console.error('Failed to start Rubic MCP server', error);
+    process.exit(1);
+});
