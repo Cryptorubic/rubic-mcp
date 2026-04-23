@@ -1,4 +1,15 @@
-import 'dotenv/config';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import dotenv from 'dotenv';
+
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = dirname(currentFilePath);
+
+dotenv.config({
+    path: resolve(currentDirPath, '../.env'),
+    quiet: true
+});
 
 type Config = {
     apiBaseUrl: string;
