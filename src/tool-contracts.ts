@@ -13,33 +13,33 @@ const tokenAddress = z
     );
 
 export const quoteRoutesInputSchema = {
-    dstTokenAddress: tokenAddress,
-    dstTokenBlockchain: blockchain,
-    fromAddress: z.string().optional().describe('Wallet address to send funds from.'),
-    nativeBlacklist: z.array(provider).optional().describe('Optional list of providers to exclude.'),
-    preferredProvider: provider.optional().describe('Optional provider to prioritize during routing.'),
-    receiver: z.string().optional().describe('Receiver address on destination chain.'),
     routeMode: z.enum(['all', 'best']).optional().describe('Whether to return only best route or all routes.'),
-    showDangerousRoutes: z.boolean().optional().describe('Include dangerous routes if true.'),
-    showFailedRoutes: z.boolean().optional().describe('Include failed routes if true.'),
+    srcTokenBlockchain: blockchain,
     srcTokenAddress: tokenAddress,
     srcTokenAmount: z.string().describe('Source amount as decimal string.'),
-    srcTokenBlockchain: blockchain,
+    dstTokenBlockchain: blockchain,
+    dstTokenAddress: tokenAddress,
+    fromAddress: z.string().optional().describe('Wallet address to send funds from.'),
+    receiver: z.string().optional().describe('Receiver address on destination chain.'),
+    nativeBlacklist: z.array(provider).optional().describe('Optional list of providers to exclude.'),
+    preferredProvider: provider.optional().describe('Optional provider to prioritize during routing.'),
+    showDangerousRoutes: z.boolean().optional().describe('Include dangerous routes if true.'),
+    showFailedRoutes: z.boolean().optional().describe('Include failed routes if true.'),
     timeout: z.number().int().optional().describe('Calculation timeout in seconds.')
 };
 
 export const buildSwapTxInputSchema = {
-    dstTokenAddress: tokenAddress,
-    dstTokenBlockchain: blockchain,
-    enableChecks: z.boolean().optional().describe('Enable gas and allowance checks before building tx.'),
-    fromAddress: z.string().describe('Wallet address that signs and sends source tx.'),
     id: z.string().describe('Route id returned by rubic_quote_routes.'),
-    receiver: z.string().describe('Receiver address on destination chain.'),
-    refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
-    signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.'),
+    srcTokenBlockchain: blockchain,
     srcTokenAddress: tokenAddress,
     srcTokenAmount: z.string().describe('Source amount as decimal string.'),
-    srcTokenBlockchain: blockchain
+    dstTokenBlockchain: blockchain,
+    dstTokenAddress: tokenAddress,
+    fromAddress: z.string().describe('Wallet address that signs and sends source tx.'),
+    receiver: z.string().describe('Receiver address on destination chain.'),
+    refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
+    enableChecks: z.boolean().optional().describe('Enable gas and allowance checks before building tx.'),
+    signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
 
 export const trackStatusInputSchema = {
