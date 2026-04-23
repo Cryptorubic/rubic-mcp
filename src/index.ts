@@ -20,12 +20,20 @@ const createFactory = (): McpServerFactory => {
     const walletService = new WalletService(config.walletPrivateKey);
 
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
-    const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService);
+    const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService, walletService);
     const signTxTool = new SignTxTool(errorMapper, validationService, walletService);
     const broadcastTxTool = new BroadcastTxTool(errorMapper, validationService, walletService);
     const trackStatusTool = new TrackStatusTool(errorMapper, apiClient, validationService);
 
-    return new McpServerFactory(buildSwapTxTool, broadcastTxTool, quoteRoutesTool, signTxTool, trackStatusTool, config.toolTimeoutMs);
+    return new McpServerFactory(
+        walletService,
+        buildSwapTxTool,
+        broadcastTxTool,
+        quoteRoutesTool,
+        signTxTool,
+        trackStatusTool,
+        config.toolTimeoutMs
+    );
 };
 
 async function start(): Promise<void> {

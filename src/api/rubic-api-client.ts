@@ -30,7 +30,10 @@ export class RubicApiClient {
         };
     }
 
-    public async buildSwapTx(input: BuildSwapTxValidatedInput, traceId: string): Promise<SwapResponseDto> {
+    public async buildSwapTx(
+        input: BuildSwapTxValidatedInput & { fromAddress: string; receiver: string },
+        traceId: string
+    ): Promise<SwapResponseDto> {
         const response = await this.httpClient.post<SwapResponseDto>('/api/routes/swap', input, {
             headers: {
                 'x-mcp-source': 'rubic_build_swap_tx',

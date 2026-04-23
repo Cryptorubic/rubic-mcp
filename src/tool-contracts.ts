@@ -1,9 +1,12 @@
 import { BLOCKCHAIN_NAME, CROSS_CHAIN_TRADE_TYPE, ON_CHAIN_TRADE_TYPE } from '@cryptorubic/core';
 import { z } from 'zod';
 
+import { config } from './config.js';
+
 const blockchain = z.enum(BLOCKCHAIN_NAME).describe('Blockchain value from BLOCKCHAIN_NAME enum, for example ETHEREUM or POLYGON.');
 
 const provider = z.union([z.enum(CROSS_CHAIN_TRADE_TYPE), z.enum(ON_CHAIN_TRADE_TYPE)]);
+const hasWalletPrivateKey = Boolean(config.walletPrivateKey);
 
 const tokenAddress = z
     .string()
@@ -35,8 +38,12 @@ export const buildSwapTxInputSchema = {
     srcTokenAmount: z.string().describe('Source amount as decimal string.'),
     dstTokenBlockchain: blockchain,
     dstTokenAddress: tokenAddress,
-    fromAddress: z.string().describe('Wallet address that signs and sends source tx.'),
-    receiver: z.string().describe('Receiver address on destination chain.'),
+    fromAddress: hasWalletPrivateKey
+        ? z.string().optional().describe('Source sender wallet address (optional when WALLET_PRIVATE_KEY is configured).')
+        : z.string().describe('Source sender wallet address (required).'),
+    receiver: hasWalletPrivateKey
+        ? z.string().optional().describe('Destination receiver wallet address (optional when WALLET_PRIVATE_KEY is configured).')
+        : z.string().describe('Destination receiver wallet address (required).'),
     refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
     enableChecks: z.boolean().optional().describe('Enable gas and allowance checks before building tx.'),
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
@@ -67,7 +74,7 @@ export const signTxInputSchema = {
 
 export const broadcastTxInputSchema = {
     blockchain: blockchain.describe('EVM blockchain from BLOCKCHAIN_NAME enum.'),
-    signedTransaction: z.string().min(1).describe('Raw signed transaction hex returned by rubic_sign_tx.')
+    signedTransaction: z.string().describe('Raw signed transaction hex returned by rubic_sign_tx.')
 };
 
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);

@@ -16,16 +16,22 @@ import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
+import { WalletService } from './wallet/wallet.service.js';
 
 export class McpServerFactory {
+    private readonly walletAddress;
+
     constructor(
+        private readonly walletService: WalletService,
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
         private readonly quoteRoutesTool: QuoteRoutesTool,
         private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
         private readonly timeoutMs: number
-    ) {}
+    ) {
+        this.walletAddress = this.walletService.getWalletAddress();
+    }
 
     public createServer(): McpServer {
         const server = new McpServer({
@@ -50,7 +56,9 @@ export class McpServerFactory {
         server.registerTool(
             BuildSwapTxTool.name,
             {
-                description: 'Build executable swap transaction data using route id from quote step.',
+                description: this.walletAddress
+                    ? `Build executable swap transaction data using route id from quote step. If fromAddress and receiver are not passed, ${this.walletAddress} is used as default.`
+                    : 'Build executable swap transaction data using route id from quote step. fromAddress and receiver are required.',
                 inputSchema: buildSwapTxInputSchema
             },
             async (args) => {

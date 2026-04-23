@@ -15,6 +15,10 @@ type FeeParams =
 export class WalletService {
     constructor(private readonly walletPrivateKey?: Hex) {}
 
+    public getWalletAddress(): string | undefined {
+        return this.walletPrivateKey ? privateKeyToAccount(this.walletPrivateKey).address : undefined;
+    }
+
     public async signTransaction(input: SignTxValidatedInput): Promise<SignedTxResponseDto> {
         const privateKey = this.getPrivateKey();
         this.ensureEvmBlockchain(input.blockchain);
