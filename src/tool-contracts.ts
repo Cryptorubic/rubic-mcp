@@ -47,6 +47,29 @@ export const trackStatusInputSchema = {
     srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
 };
 
+const evmTransactionSchema = z.looseObject({
+    to: z.string().optional().describe('Target contract or receiver address.'),
+    data: z.string().optional().describe('Encoded calldata.'),
+    value: z.string().optional().describe('Native value in wei as decimal string.'),
+    gas: z.string().optional().describe('Gas limit in wei as decimal string.'),
+    gasPrice: z.string().optional().describe('Legacy gas price in wei as decimal string.'),
+    maxFeePerGas: z.string().optional().describe('EIP-1559 max fee per gas in wei as decimal string.'),
+    maxPriorityFeePerGas: z.string().optional().describe('EIP-1559 max priority fee per gas in wei as decimal string.'),
+    nonce: z.number().int().nonnegative().optional().describe('Optional explicit nonce.'),
+    chainId: z.number().int().positive().optional().describe('Optional explicit chain id override.')
+});
+
+export const signTxInputSchema = {
+    blockchain: blockchain.describe('EVM blockchain from BLOCKCHAIN_NAME enum.'),
+    fromAddress: z.string().optional().describe('Optional sender address for key ownership check.'),
+    transaction: evmTransactionSchema.describe('Transaction payload returned by rubic_build_swap_tx.')
+};
+
+export const broadcastTxInputSchema = {
+    blockchain: blockchain.describe('EVM blockchain from BLOCKCHAIN_NAME enum.'),
+    signedTransaction: z.string().min(1).describe('Raw signed transaction hex returned by rubic_sign_tx.')
+};
+
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
 export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
@@ -57,7 +80,11 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
         });
     }
 });
+export const signTxValidationSchema = z.looseObject(signTxInputSchema);
+export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
 
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
 export type BuildSwapTxValidatedInput = z.infer<typeof buildSwapTxValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
+export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
+export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;

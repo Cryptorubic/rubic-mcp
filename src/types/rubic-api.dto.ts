@@ -234,3 +234,14 @@ export interface StatusResponseDto {
     destinationNetworkTitle: string | null;
     destinationNetworkChainId: number | null;
 }
+
+export interface SignedTxResponseDto {
+    blockchain: BlockchainName;
+    fromAddress: string;
+    signedTransaction: string;
+}
+
+export interface BroadcastTxResponseDto {
+    blockchain: BlockchainName;
+    txHash: string;
+}

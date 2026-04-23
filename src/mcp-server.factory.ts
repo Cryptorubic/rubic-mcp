@@ -4,15 +4,25 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import { McpResultEnvelope } from './shared/result-envelope.js';
 import { toCallToolResult } from './shared/to-call-tool-result.js';
-import { buildSwapTxInputSchema, quoteRoutesInputSchema, trackStatusInputSchema } from './tool-contracts.js';
+import {
+    broadcastTxInputSchema,
+    buildSwapTxInputSchema,
+    quoteRoutesInputSchema,
+    signTxInputSchema,
+    trackStatusInputSchema
+} from './tool-contracts.js';
+import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
+import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
 
 export class McpServerFactory {
     constructor(
         private readonly buildSwapTxTool: BuildSwapTxTool,
+        private readonly broadcastTxTool: BroadcastTxTool,
         private readonly quoteRoutesTool: QuoteRoutesTool,
+        private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
         private readonly timeoutMs: number
     ) {}
@@ -46,6 +56,32 @@ export class McpServerFactory {
             async (args) => {
                 const result = await this.executeWithTelemetry(BuildSwapTxTool.name, () =>
                     this.buildSwapTxTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            SignTxTool.name,
+            {
+                description: 'Sign an EVM transaction using WALLET_PRIVATE_KEY from .env.',
+                inputSchema: signTxInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(SignTxTool.name, () => this.signTxTool.execute(args, randomUUID()));
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            BroadcastTxTool.name,
+            {
+                description: 'Broadcast a raw signed EVM transaction to the selected blockchain network.',
+                inputSchema: broadcastTxInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(BroadcastTxTool.name, () =>
+                    this.broadcastTxTool.execute(args, randomUUID())
                 );
                 return toCallToolResult(result);
             }

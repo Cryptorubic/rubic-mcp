@@ -6,20 +6,26 @@ import { startHttpServer } from './http-server.js';
 import { McpServerFactory } from './mcp-server.factory.js';
 import { McpErrorMapper } from './shared/error-mapper.js';
 import { McpValidationService } from './shared/validation.service.js';
+import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
+import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
+import { WalletService } from './wallet/wallet.service.js';
 
 const createFactory = (): McpServerFactory => {
     const errorMapper = new McpErrorMapper();
     const validationService = new McpValidationService();
     const apiClient = new RubicApiClient(config.apiBaseUrl, config.apiTimeoutMs);
+    const walletService = new WalletService(config.walletPrivateKey);
 
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
     const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService);
+    const signTxTool = new SignTxTool(errorMapper, validationService, walletService);
+    const broadcastTxTool = new BroadcastTxTool(errorMapper, validationService, walletService);
     const trackStatusTool = new TrackStatusTool(errorMapper, apiClient, validationService);
 
-    return new McpServerFactory(buildSwapTxTool, quoteRoutesTool, trackStatusTool, config.toolTimeoutMs);
+    return new McpServerFactory(buildSwapTxTool, broadcastTxTool, quoteRoutesTool, signTxTool, trackStatusTool, config.toolTimeoutMs);
 };
 
 async function start(): Promise<void> {
