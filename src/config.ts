@@ -12,7 +12,8 @@ dotenv.config({
 });
 
 type Config = {
-    apiBaseUrl: string;
+    rubicApiBaseUrl: string;
+    tokensApiBaseUrl: string;
     apiTimeoutMs: number;
     host: string;
     port: number;
@@ -49,7 +50,8 @@ const parseWalletPrivateKey = (value: string | undefined): `0x${string}` | undef
 };
 
 export const config: Config = {
-    apiBaseUrl: process.env.RUBIC_API_BASE_URL || 'https://rubic-api-v2.rubic.exchange',
+    rubicApiBaseUrl: process.env.RUBIC_API_BASE_URL || 'https://rubic-api-v2.rubic.exchange',
+    tokensApiBaseUrl: process.env.TOKENS_API_BASE_URL || 'https://api.rubic.exchange/api',
     apiTimeoutMs: parseNumber(process.env.RUBIC_API_TIMEOUT_MS, 60_000),
     host: process.env.MCP_HOST || '127.0.0.1',
     port: parseNumber(process.env.MCP_PORT, 3333),

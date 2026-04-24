@@ -50,10 +50,11 @@ export interface TokenDto {
     decimals: number;
     symbol: string;
     name: string;
-    blockchainId: number;
     blockchain: BlockchainName;
     price?: number;
 }
+
+export type SearchTokensResponseDto = TokenDto[];
 
 export interface TokenAmountDto extends TokenDto {
     amount: string;

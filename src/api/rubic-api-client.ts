@@ -1,14 +1,20 @@
+import { BackendBlockchain, BlockchainName, FROM_BACKEND_BLOCKCHAINS, TO_BACKEND_BLOCKCHAINS } from '@cryptorubic/core';
 import axios, { AxiosInstance } from 'axios';
 
-import { BuildSwapTxValidatedInput, QuoteRoutesValidatedInput, TrackStatusValidatedInput } from '../tool-contracts.js';
-import { QuoteRoutesOutput, StatusResponseDto, SwapResponseDto } from '../types/rubic-api.dto.js';
+import { config } from '../config.js';
+import {
+    BuildSwapTxValidatedInput,
+    QuoteRoutesValidatedInput,
+    SearchTokensValidatedInput,
+    TrackStatusValidatedInput
+} from '../tool-contracts.js';
+import { QuoteRoutesOutput, SearchTokensResponseDto, StatusResponseDto, SwapResponseDto } from '../types/rubic-api.dto.js';
 
 export class RubicApiClient {
     private readonly httpClient: AxiosInstance;
 
-    constructor(baseUrl: string, timeoutMs: number) {
+    constructor(timeoutMs: number) {
         this.httpClient = axios.create({
-            baseURL: baseUrl,
             timeout: timeoutMs
         });
     }
@@ -18,7 +24,7 @@ export class RubicApiClient {
         const { routeMode: _routeMode, ...payload } = input;
 
         const endpoint = mode === 'all' ? '/api/routes/quoteAll' : '/api/routes/quoteBest';
-        const response = await this.httpClient.post<QuoteRoutesOutput['result']>(endpoint, payload, {
+        const response = await this.httpClient.post<QuoteRoutesOutput['result']>(config.rubicApiBaseUrl + endpoint, payload, {
             headers: {
                 'x-trace-id': traceId
             }
@@ -34,7 +40,7 @@ export class RubicApiClient {
         input: BuildSwapTxValidatedInput & { fromAddress: string; receiver: string },
         traceId: string
     ): Promise<SwapResponseDto> {
-        const response = await this.httpClient.post<SwapResponseDto>('/api/routes/swap', input, {
+        const response = await this.httpClient.post<SwapResponseDto>(config.rubicApiBaseUrl + '/api/routes/swap', input, {
             headers: {
                 'x-mcp-source': 'rubic_build_swap_tx',
                 'x-trace-id': traceId
@@ -45,7 +51,7 @@ export class RubicApiClient {
     }
 
     public async trackStatus(input: TrackStatusValidatedInput): Promise<StatusResponseDto> {
-        const response = await this.httpClient.get<StatusResponseDto>('/api/info/statusExtended', {
+        const response = await this.httpClient.get<StatusResponseDto>(config.rubicApiBaseUrl + '/api/info/statusExtended', {
             params: {
                 ...(input.id ? { id: input.id } : {}),
                 ...(input.srcTxHash ? { srcTxHash: input.srcTxHash } : {})
@@ -53,5 +59,39 @@ export class RubicApiClient {
         });
 
         return response.data;
+    }
+
+    public async searchTokens(input: SearchTokensValidatedInput): Promise<SearchTokensResponseDto> {
+        const params = {
+            query: input.query.trim(),
+            ...(input.blockchain && { network: TO_BACKEND_BLOCKCHAINS[input.blockchain] })
+        };
+
+        const response = await this.httpClient.get<{
+            results: {
+                address: string;
+                decimals: number;
+                symbol: string;
+                name: string;
+                blockchainNetwork?: BackendBlockchain;
+                network?: BlockchainName;
+                usdPrice: number;
+            }[];
+        }>(config.tokensApiBaseUrl + '/v2/tokens', {
+            params
+        });
+
+        return response.data.results
+            .map((backendToken) => ({
+                address: backendToken.address,
+                decimals: backendToken.decimals,
+                symbol: backendToken.symbol,
+                name: backendToken.name,
+                blockchain: (backendToken.blockchainNetwork
+                    ? FROM_BACKEND_BLOCKCHAINS[backendToken.blockchainNetwork]
+                    : backendToken.network)!,
+                pricate: backendToken.usdPrice
+            }))
+            .slice(0, input.limit ?? 10);
     }
 }

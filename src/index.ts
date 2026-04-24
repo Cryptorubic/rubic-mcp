@@ -10,6 +10,7 @@ import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
+import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
 import { WalletService } from './wallet/wallet.service.js';
@@ -17,11 +18,12 @@ import { WalletService } from './wallet/wallet.service.js';
 const createFactory = (): McpServerFactory => {
     const errorMapper = new McpErrorMapper();
     const validationService = new McpValidationService();
-    const apiClient = new RubicApiClient(config.apiBaseUrl, config.apiTimeoutMs);
+    const apiClient = new RubicApiClient(config.apiTimeoutMs);
     const walletService = new WalletService(config.walletPrivateKey);
 
     const getSupportedChainsTool = new GetSupportedChainsTool();
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
+    const searchTokensTool = new SearchTokensTool(errorMapper, apiClient, validationService);
     const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService, walletService);
     const signTxTool = new SignTxTool(errorMapper, validationService, walletService);
     const broadcastTxTool = new BroadcastTxTool(errorMapper, validationService, walletService);
@@ -33,6 +35,7 @@ const createFactory = (): McpServerFactory => {
         buildSwapTxTool,
         broadcastTxTool,
         quoteRoutesTool,
+        searchTokensTool,
         signTxTool,
         trackStatusTool,
         config.toolTimeoutMs

@@ -14,6 +14,12 @@ const tokenAddress = z
         'Token contract address on the selected blockchain. For native chain currency use the zero address 0x0000000000000000000000000000000000000000 (Rubic canonical form).'
     );
 
+export const searchTokensInputSchema = {
+    query: z.string().describe('Token name, symbol or contract address.'),
+    blockchain: blockchain.optional().describe('Optional blockchain filter from BLOCKCHAIN_NAME enum.'),
+    limit: z.number().int().positive().max(50).optional().default(10).describe('Maximum number of results to return. Default is 10.')
+};
+
 export const quoteRoutesInputSchema = {
     routeMode: z.enum(['all', 'best']).optional().describe('Whether to return only best route or all routes.'),
     srcTokenBlockchain: blockchain,
@@ -84,6 +90,7 @@ export const quoteSwapSignBroadcastInputSchema = {
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
 
+export const searchTokensValidationSchema = z.looseObject(searchTokensInputSchema);
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
 export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
@@ -98,6 +105,7 @@ export const signTxValidationSchema = z.looseObject(signTxInputSchema);
 export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
 export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
 
+export type SearchTokensValidatedInput = z.infer<typeof searchTokensValidationSchema>;
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
 export type BuildSwapTxValidatedInput = z.infer<typeof buildSwapTxValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;

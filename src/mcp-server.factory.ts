@@ -9,6 +9,7 @@ import {
     buildSwapTxInputSchema,
     quoteRoutesInputSchema,
     quoteSwapSignBroadcastInputSchema,
+    searchTokensInputSchema,
     signTxInputSchema,
     trackStatusInputSchema
 } from './tool-contracts.js';
@@ -16,6 +17,7 @@ import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
+import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
 import { BroadcastTxResponseDto, QuoteAllDto, QuoteResponseDto } from './types/rubic-api.dto.js';
@@ -33,6 +35,7 @@ export class McpServerFactory {
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
         private readonly quoteRoutesTool: QuoteRoutesTool,
+        private readonly searchTokensTool: SearchTokensTool,
         private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
         private readonly timeoutMs: number
@@ -55,6 +58,21 @@ export class McpServerFactory {
             async (args) => {
                 const result = await this.executeWithTelemetry(GetSupportedChainsTool.name, () =>
                     this.getSupportedChainsTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            SearchTokensTool.name,
+            {
+                description:
+                    'Search tokens by name, symbol or contract address. Returns token metadata and supports optional blockchain filter.',
+                inputSchema: searchTokensInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(SearchTokensTool.name, () =>
+                    this.searchTokensTool.execute(args, randomUUID())
                 );
                 return toCallToolResult(result);
             }
