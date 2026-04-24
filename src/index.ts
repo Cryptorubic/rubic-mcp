@@ -8,6 +8,7 @@ import { McpErrorMapper } from './shared/error-mapper.js';
 import { McpValidationService } from './shared/validation.service.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
@@ -19,6 +20,7 @@ const createFactory = (): McpServerFactory => {
     const apiClient = new RubicApiClient(config.apiBaseUrl, config.apiTimeoutMs);
     const walletService = new WalletService(config.walletPrivateKey);
 
+    const getSupportedChainsTool = new GetSupportedChainsTool();
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
     const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService, walletService);
     const signTxTool = new SignTxTool(errorMapper, validationService, walletService);
@@ -27,6 +29,7 @@ const createFactory = (): McpServerFactory => {
 
     return new McpServerFactory(
         walletService,
+        getSupportedChainsTool,
         buildSwapTxTool,
         broadcastTxTool,
         quoteRoutesTool,

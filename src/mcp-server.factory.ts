@@ -14,6 +14,7 @@ import {
 } from './tool-contracts.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
@@ -28,6 +29,7 @@ export class McpServerFactory {
 
     constructor(
         private readonly walletService: WalletService,
+        private readonly getSupportedChainsTool: GetSupportedChainsTool,
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
         private readonly quoteRoutesTool: QuoteRoutesTool,
@@ -43,6 +45,20 @@ export class McpServerFactory {
             name: 'rubic-api-mcp',
             version: '1.0.0'
         });
+
+        server.registerTool(
+            GetSupportedChainsTool.name,
+            {
+                description: 'Get all blockchain names supported by this Rubic MCP server.',
+                inputSchema: {}
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(GetSupportedChainsTool.name, () =>
+                    this.getSupportedChainsTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
 
         server.registerTool(
             QuoteRoutesTool.name,

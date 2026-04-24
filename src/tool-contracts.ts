@@ -10,7 +10,6 @@ const hasWalletPrivateKey = Boolean(config.walletPrivateKey);
 
 const tokenAddress = z
     .string()
-    .min(1)
     .describe(
         'Token contract address on the selected blockchain. For native chain currency use the zero address 0x0000000000000000000000000000000000000000 (Rubic canonical form).'
     );
