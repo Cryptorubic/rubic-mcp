@@ -77,6 +77,14 @@ export const broadcastTxInputSchema = {
     signedTransaction: z.string().describe('Raw signed transaction hex returned by rubic_sign_tx.')
 };
 
+export const quoteSwapSignBroadcastInputSchema = {
+    ...quoteRoutesInputSchema,
+    selectedRouteId: z.string().optional().describe('Optional explicit route id from rubic_quote_routes.'),
+    refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
+    enableChecks: z.boolean().optional().describe('Enable gas and allowance checks before building tx.'),
+    signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
+};
+
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
 export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
@@ -89,9 +97,11 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
 });
 export const signTxValidationSchema = z.looseObject(signTxInputSchema);
 export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
+export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
 
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
 export type BuildSwapTxValidatedInput = z.infer<typeof buildSwapTxValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
 export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
 export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;
+export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignBroadcastValidationSchema>;
