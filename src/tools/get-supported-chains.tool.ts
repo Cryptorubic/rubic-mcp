@@ -8,7 +8,7 @@ type GetSupportedChainsResponseDto = {
 }[];
 
 export class GetSupportedChainsTool {
-    public static readonly name = 'get_supported_chains';
+    public static readonly name = 'rubic_get_supported_chains';
 
     public async execute(_input: Record<string, unknown>, traceId: string): Promise<McpResultEnvelope<GetSupportedChainsResponseDto>> {
         return {

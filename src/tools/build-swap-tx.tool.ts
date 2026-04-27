@@ -1,4 +1,4 @@
-import { RubicApiClient } from '../api/rubic-api-client.js';
+import { ApiClient } from '../api/api-client.js';
 import { McpErrorMapper } from '../shared/error-mapper.js';
 import { normalizeTokenAddresses } from '../shared/normalize-fake-native-token-address.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
@@ -12,7 +12,7 @@ export class BuildSwapTxTool {
 
     constructor(
         private readonly errorMapper: McpErrorMapper,
-        private readonly rubicApiClient: RubicApiClient,
+        private readonly apiClient: ApiClient,
         private readonly validationService: McpValidationService,
         private readonly walletService: WalletService
     ) {}
@@ -30,7 +30,7 @@ export class BuildSwapTxTool {
                 );
             }
 
-            const swapData = await this.rubicApiClient.buildSwapTx(
+            const swapData = await this.apiClient.buildSwapTx(
                 {
                     ...normalizedInput,
                     fromAddress,

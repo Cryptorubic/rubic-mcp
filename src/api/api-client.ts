@@ -8,9 +8,25 @@ import {
     SearchTokensValidatedInput,
     TrackStatusValidatedInput
 } from '../tool-contracts.js';
-import { QuoteRoutesOutput, SearchTokensResponseDto, StatusResponseDto, SwapResponseDto } from '../types/rubic-api.dto.js';
+import {
+    GetBalancesResponseDto,
+    QuoteRoutesOutput,
+    SearchTokensResponseDto,
+    StatusResponseDto,
+    SwapResponseDto
+} from '../types/rubic-api.dto.js';
 
-export class RubicApiClient {
+interface BackendToken {
+    address: string;
+    decimals: number;
+    symbol: string;
+    name: string;
+    blockchainNetwork?: BackendBlockchain;
+    network?: BlockchainName;
+    usdPrice: number;
+}
+
+export class ApiClient {
     private readonly httpClient: AxiosInstance;
 
     constructor(timeoutMs: number) {
@@ -68,15 +84,7 @@ export class RubicApiClient {
         };
 
         const response = await this.httpClient.get<{
-            results: {
-                address: string;
-                decimals: number;
-                symbol: string;
-                name: string;
-                blockchainNetwork?: BackendBlockchain;
-                network?: BlockchainName;
-                usdPrice: number;
-            }[];
+            results: BackendToken[];
         }>(config.tokensApiBaseUrl + '/v2/tokens', {
             params
         });
@@ -93,5 +101,32 @@ export class RubicApiClient {
                 pricate: backendToken.usdPrice
             }))
             .slice(0, input.limit ?? 10);
+    }
+
+    public async getBalances(userAddress: string, blockchains?: BlockchainName[]): Promise<GetBalancesResponseDto> {
+        const response = await this.httpClient.get<{
+            tokens: {
+                [key in BlockchainName]: (BackendToken & { balance: string })[];
+            };
+        }>(config.tokensApiBaseUrl + '/v3/tmp/tokens/get_user_token_balances', {
+            params: {
+                userAddress: userAddress
+            }
+        });
+
+        return {
+            balances: (Object.keys(response.data.tokens) as BlockchainName[])
+                .filter((blockchain) => (blockchains ? blockchains.includes(blockchain) : true))
+                .map((blockchain) => ({
+                    blockchain,
+                    tokens: response.data.tokens[blockchain].map((backendToken) => ({
+                        address: backendToken.address,
+                        balance: backendToken.balance,
+                        decimals: backendToken.decimals,
+                        name: backendToken.name,
+                        symbol: backendToken.symbol
+                    }))
+                }))
+        };
     }
 }

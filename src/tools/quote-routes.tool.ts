@@ -1,4 +1,4 @@
-import { RubicApiClient } from '../api/rubic-api-client.js';
+import { ApiClient } from '../api/api-client.js';
 import { McpErrorMapper } from '../shared/error-mapper.js';
 import { normalizeTokenAddresses } from '../shared/normalize-fake-native-token-address.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
@@ -11,7 +11,7 @@ export class QuoteRoutesTool {
 
     constructor(
         private readonly errorMapper: McpErrorMapper,
-        private readonly rubicApiClient: RubicApiClient,
+        private readonly apiClient: ApiClient,
         private readonly validationService: McpValidationService
     ) {}
 
@@ -21,7 +21,7 @@ export class QuoteRoutesTool {
             const mode = validatedInput.routeMode ?? 'best';
             const { routeMode: _routeMode, ...quotePayload } = validatedInput;
             const normalizedPayload = normalizeTokenAddresses(quotePayload);
-            const result = await this.rubicApiClient.quoteRoutes({ ...normalizedPayload, routeMode: mode }, traceId);
+            const result = await this.apiClient.quoteRoutes({ ...normalizedPayload, routeMode: mode }, traceId);
 
             return {
                 data: result,

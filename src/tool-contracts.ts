@@ -54,11 +54,6 @@ export const buildSwapTxInputSchema = {
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
 
-export const trackStatusInputSchema = {
-    id: z.string().optional().describe('Rubic route id from swap response.'),
-    srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
-};
-
 const evmTransactionSchema = z.looseObject({
     to: z.string().optional().describe('Target contract or receiver address.'),
     data: z.string().optional().describe('Encoded calldata.'),
@@ -90,9 +85,27 @@ export const quoteSwapSignBroadcastInputSchema = {
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
 
+export const trackStatusInputSchema = {
+    id: z.string().optional().describe('Rubic route id from swap response.'),
+    srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
+};
+
+export const getBalancesInputSchema = {
+    address: hasWalletPrivateKey
+        ? z.string().optional().describe('EVM wallet address to inspect. Defaults to WALLET_PRIVATE_KEY wallet when omitted.')
+        : z.string().describe('EVM wallet address to inspect.'),
+    blockchains: z
+        .array(blockchain)
+        .optional()
+        .describe('Optional list of blockchains to check. Defaults to all supported EVM blockchains.')
+};
+
 export const searchTokensValidationSchema = z.looseObject(searchTokensInputSchema);
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
+export const signTxValidationSchema = z.looseObject(signTxInputSchema);
+export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
+export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
 export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
     if (!value.id && !value.srcTxHash) {
         ctx.addIssue({
@@ -101,14 +114,13 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
         });
     }
 });
-export const signTxValidationSchema = z.looseObject(signTxInputSchema);
-export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
-export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
+export const getBalancesValidationSchema = z.looseObject(getBalancesInputSchema);
 
 export type SearchTokensValidatedInput = z.infer<typeof searchTokensValidationSchema>;
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
 export type BuildSwapTxValidatedInput = z.infer<typeof buildSwapTxValidationSchema>;
-export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
 export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
 export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;
 export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignBroadcastValidationSchema>;
+export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
+export type GetBalancesValidatedInput = z.infer<typeof getBalancesValidationSchema>;

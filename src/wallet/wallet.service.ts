@@ -1,12 +1,11 @@
 import { BlockchainName, BlockchainsInfo, EvmBlockchainName } from '@cryptorubic/core';
 import { viemBlockchainMapping } from '@cryptorubic/web3';
-import { Chain, createPublicClient, createWalletClient, http } from 'viem';
+import { Chain, createPublicClient, createWalletClient, Hex, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { BroadcastTxValidatedInput, SignTxValidatedInput } from '../tool-contracts.js';
 import { BroadcastTxResponseDto, SignedTxResponseDto } from '../types/rubic-api.dto.js';
 
-type Hex = `0x${string}`;
 type FeeParams =
     | { kind: 'legacy'; gasPrice: bigint }
     | { kind: 'eip1559'; maxFeePerGas?: bigint; maxPriorityFeePerGas?: bigint }

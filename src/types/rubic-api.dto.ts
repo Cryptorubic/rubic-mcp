@@ -246,3 +246,20 @@ export interface BroadcastTxResponseDto {
     blockchain: BlockchainName;
     txHash: string;
 }
+
+export interface TokenBalanceDto {
+    address: string;
+    balance: string;
+    decimals: number;
+    name: string;
+    symbol: string;
+}
+
+export interface ChainBalancesDto {
+    blockchain: BlockchainName;
+    tokens: TokenBalanceDto[];
+}
+
+export interface GetBalancesResponseDto {
+    balances: ChainBalancesDto[];
+}

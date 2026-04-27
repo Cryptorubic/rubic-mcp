@@ -1,4 +1,4 @@
-import { RubicApiClient } from '../api/rubic-api-client.js';
+import { ApiClient } from '../api/api-client.js';
 import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
@@ -10,7 +10,7 @@ export class TrackStatusTool {
 
     constructor(
         private readonly errorMapper: McpErrorMapper,
-        private readonly rubicApiClient: RubicApiClient,
+        private readonly apiClient: ApiClient,
         private readonly validationService: McpValidationService
     ) {}
 
@@ -18,7 +18,7 @@ export class TrackStatusTool {
         try {
             const validatedInput = this.validationService.validate<TrackStatusValidatedInput>(trackStatusValidationSchema, input);
 
-            const status = await this.rubicApiClient.trackStatus(validatedInput);
+            const status = await this.apiClient.trackStatus(validatedInput);
 
             return {
                 data: status,
