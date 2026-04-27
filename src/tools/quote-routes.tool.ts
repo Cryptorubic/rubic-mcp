@@ -4,7 +4,7 @@ import { normalizeTokenAddresses } from '../shared/normalize-fake-native-token-a
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { QuoteRoutesValidatedInput, quoteRoutesValidationSchema } from '../tool-contracts.js';
-import { QuoteRoutesOutput } from '../types/rubic-api.dto.js';
+import { QuoteRoutesOutput } from '../types/api.dto.js';
 
 export class QuoteRoutesTool {
     public static readonly name = 'rubic_quote_routes';

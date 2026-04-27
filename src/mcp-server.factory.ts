@@ -20,7 +20,7 @@ import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
-import { BroadcastTxResponseDto, QuoteAllDto, QuoteResponseDto } from './types/rubic-api.dto.js';
+import { BroadcastTxResponseDto, QuoteAllDto, QuoteResponseDto } from './types/api.dto.js';
 import { WalletService } from './wallet/wallet.service.js';
 
 const signAndBroadcastTxToolName = 'rubic_sign_and_broadcast_tx';

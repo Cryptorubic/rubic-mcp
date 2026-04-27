@@ -8,7 +8,7 @@ import {
     SearchTokensValidatedInput,
     TrackStatusValidatedInput
 } from '../tool-contracts.js';
-import { QuoteRoutesOutput, SearchTokensResponseDto, StatusResponseDto, SwapResponseDto } from '../types/rubic-api.dto.js';
+import { QuoteRoutesOutput, SearchTokensResponseDto, StatusResponseDto, SwapResponseDto } from '../types/api.dto.js';
 
 interface BackendToken {
     address: string;

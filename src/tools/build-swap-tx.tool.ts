@@ -4,7 +4,7 @@ import { normalizeTokenAddresses } from '../shared/normalize-fake-native-token-a
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { BuildSwapTxValidatedInput, buildSwapTxValidationSchema } from '../tool-contracts.js';
-import { SwapResponseDto } from '../types/rubic-api.dto.js';
+import { SwapResponseDto } from '../types/api.dto.js';
 import { WalletService } from '../wallet/wallet.service.js';
 
 export class BuildSwapTxTool {

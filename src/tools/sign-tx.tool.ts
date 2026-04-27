@@ -2,7 +2,7 @@ import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { SignTxValidatedInput, signTxValidationSchema } from '../tool-contracts.js';
-import { SignedTxResponseDto } from '../types/rubic-api.dto.js';
+import { SignedTxResponseDto } from '../types/api.dto.js';
 import { WalletService } from '../wallet/wallet.service.js';
 
 export class SignTxTool {

@@ -3,7 +3,7 @@ import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { TrackStatusValidatedInput, trackStatusValidationSchema } from '../tool-contracts.js';
-import { StatusResponseDto } from '../types/rubic-api.dto.js';
+import { StatusResponseDto } from '../types/api.dto.js';
 
 export class TrackStatusTool {
     public static readonly name = 'rubic_track_status';

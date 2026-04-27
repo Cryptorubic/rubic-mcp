@@ -2,7 +2,7 @@ import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { BroadcastTxValidatedInput, broadcastTxValidationSchema } from '../tool-contracts.js';
-import { BroadcastTxResponseDto } from '../types/rubic-api.dto.js';
+import { BroadcastTxResponseDto } from '../types/api.dto.js';
 import { WalletService } from '../wallet/wallet.service.js';
 
 export class BroadcastTxTool {

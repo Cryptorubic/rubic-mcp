@@ -4,7 +4,7 @@ import { Chain, createPublicClient, createWalletClient, Hex, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { BroadcastTxValidatedInput, SignTxValidatedInput } from '../tool-contracts.js';
-import { BroadcastTxResponseDto, SignedTxResponseDto } from '../types/rubic-api.dto.js';
+import { BroadcastTxResponseDto, SignedTxResponseDto } from '../types/api.dto.js';
 
 type FeeParams =
     | { kind: 'legacy'; gasPrice: bigint }

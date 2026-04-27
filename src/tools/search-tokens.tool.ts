@@ -3,7 +3,7 @@ import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
 import { SearchTokensValidatedInput, searchTokensValidationSchema } from '../tool-contracts.js';
-import { SearchTokensResponseDto } from '../types/rubic-api.dto.js';
+import { SearchTokensResponseDto } from '../types/api.dto.js';
 
 export class SearchTokensTool {
     public static readonly name = 'rubic_search_tokens';
