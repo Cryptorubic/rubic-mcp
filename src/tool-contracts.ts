@@ -32,6 +32,7 @@ export const quoteRoutesInputSchema = {
     receiver: z.string().optional().describe('Receiver address on destination chain.'),
     nativeBlacklist: z.array(provider).optional().describe('Optional list of providers to exclude.'),
     preferredProvider: provider.optional().describe('Optional provider to prioritize during routing.'),
+    slippage: z.number().optional().describe('Slippage tolerance in percents for trade (e.g. 0.02 for 2% slippage).'),
     showDangerousRoutes: z.boolean().optional().describe('Include dangerous routes if true.'),
     showFailedRoutes: z.boolean().optional().describe('Include failed routes if true.'),
     timeout: z.number().int().optional().describe('Calculation timeout in seconds.')
@@ -51,6 +52,7 @@ export const buildSwapTxInputSchema = {
         ? z.string().optional().describe('Destination receiver wallet address (optional when WALLET_PRIVATE_KEY is configured).')
         : z.string().describe('Destination receiver wallet address (required).'),
     refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
+    slippage: z.number().optional().describe('Slippage tolerance in percents for trade (e.g. 0.02 for 2% slippage).'),
     enableChecks: z.boolean().optional().describe('Enable gas and allowance checks before building tx.'),
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
