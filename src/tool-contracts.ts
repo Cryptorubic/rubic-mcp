@@ -13,6 +13,7 @@ const tokenAddress = z
     .describe(
         'Token contract address on the selected blockchain. For native chain currency use the zero address 0x0000000000000000000000000000000000000000 (Rubic canonical form).'
     );
+const tokenSymbol = z.string().describe('Token symbol (e.g. USDC, USDT, WBTC, etc.).');
 
 export const searchTokensInputSchema = {
     query: z.string().describe('Token name, symbol or contract address.'),
@@ -90,6 +91,14 @@ export const trackStatusInputSchema = {
     srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
 };
 
+export const getSwapUrlInputSchema = {
+    srcTokenBlockchain: blockchain,
+    srcTokenSymbol: tokenSymbol,
+    srcTokenAmount: z.string().describe('Source amount as decimal string.'),
+    dstTokenBlockchain: blockchain,
+    dstTokenSymbol: tokenSymbol
+};
+
 export const searchTokensValidationSchema = z.looseObject(searchTokensInputSchema);
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
@@ -104,6 +113,7 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
         });
     }
 });
+export const getSwapUrlValidationSchema = z.looseObject(getSwapUrlInputSchema);
 
 export type SearchTokensValidatedInput = z.infer<typeof searchTokensValidationSchema>;
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
@@ -112,3 +122,4 @@ export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
 export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;
 export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignBroadcastValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
+export type GetSwapUrlValidatedInput = z.infer<typeof getSwapUrlValidationSchema>;

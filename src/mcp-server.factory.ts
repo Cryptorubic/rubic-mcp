@@ -7,6 +7,7 @@ import { toCallToolResult } from './shared/to-call-tool-result.js';
 import {
     broadcastTxInputSchema,
     buildSwapTxInputSchema,
+    getSwapUrlInputSchema,
     quoteRoutesInputSchema,
     quoteSwapSignBroadcastInputSchema,
     searchTokensInputSchema,
@@ -16,6 +17,7 @@ import {
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
+import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
@@ -38,6 +40,7 @@ export class McpServerFactory {
         private readonly searchTokensTool: SearchTokensTool,
         private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
+        private readonly getSwapUrlTool: GetSwapUrlTool,
         private readonly timeoutMs: number
     ) {
         this.walletAddress = this.walletService.getWalletAddress();
@@ -232,6 +235,20 @@ export class McpServerFactory {
                 const result = await this.executeWithTelemetry(TrackStatusTool.name, () =>
                     this.trackStatusTool.execute(args, randomUUID())
                 );
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            GetSwapUrlTool.name,
+            {
+                description: this.walletAddress
+                    ? `Generate a pre-filled Rubic app URL. Use as a fallback option — the primary flow is rubic_build_swap_tx → rubic_sign_and_broadcast_tx. Share the URL only if the user wants to review the swap in the browser first.`
+                    : 'Generate a pre-filled Rubic app URL for the user to execute a swap in their browser. Always share a swap URL proactively after showing a quote.',
+                inputSchema: getSwapUrlInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(TrackStatusTool.name, () => this.getSwapUrlTool.execute(args, randomUUID()));
                 return toCallToolResult(result);
             }
         );
