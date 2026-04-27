@@ -15,8 +15,8 @@ This MCP server provides a complete flow to:
 
 ### 1. Getting a quote (no wallet required)
 
-1. **Resolve chains (optional)**: call `rubic_get_supported_chains`.
-2. **Find tokens (optional)**: call `rubic_search_tokens` by symbol/name/address.
+1. **Resolve chains**: call `rubic_get_supported_chains`.
+2. **Find tokens**: call `rubic_search_tokens` by symbol/name/address.
 3. **Get routes**: call `rubic_quote_routes`.
    - Use `routeMode: "best"` for one best route.
    - Use `routeMode: "all"` to inspect candidates.
@@ -62,6 +62,7 @@ If `WALLET_PRIVATE_KEY` is not configured:
 
 | Tool | Requires `WALLET_PRIVATE_KEY` | Description |
 |------|-------------------------------|-------------|
+| `rubic_get_instructions` | No | Returns this guide |
 | `rubic_get_supported_chains` | No | Returns all supported blockchains and chain IDs |
 | `rubic_search_tokens` | No | Search tokens by name, symbol, or address |
 | `rubic_quote_routes` | No | Calculate swap routes (best or all) |
@@ -83,9 +84,10 @@ If `WALLET_PRIVATE_KEY` is not configured:
 
 ## Common mistakes to avoid
 
-1. **Forgetting required addresses**: without `WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
-2. **Mixing amount formats**: keep `srcTokenAmount` human-readable decimal string.
-3. **Using wrong native token address**: for native token use Rubic zero address.
+1. **Skipping token/chain validation**: always resolve chain and token context first.
+2. **Forgetting required addresses**: without `WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
+3. **Mixing amount formats**: keep `srcTokenAmount` human-readable decimal string.
+4. **Using wrong native token address**: for native token use Rubic zero address.
 
 ## Tips
 

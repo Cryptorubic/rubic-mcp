@@ -16,6 +16,7 @@ import {
 } from './tool-contracts.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { GetInstructionsTool } from './tools/get-instructions.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
@@ -33,6 +34,7 @@ export class McpServerFactory {
 
     constructor(
         private readonly walletService: WalletService,
+        private readonly getInstructionsTool: GetInstructionsTool,
         private readonly getSupportedChainsTool: GetSupportedChainsTool,
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
@@ -51,6 +53,21 @@ export class McpServerFactory {
             name: 'rubic-api-mcp',
             version: '1.0.0'
         });
+
+        server.registerTool(
+            GetInstructionsTool.name,
+            {
+                description:
+                    'RECOMMENDED: Call this first to get the full Rubic MCP usage guide — workflow, execution modes, common mistakes, and tips.',
+                inputSchema: {}
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(GetInstructionsTool.name, () =>
+                    this.getInstructionsTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
 
         server.registerTool(
             GetSupportedChainsTool.name,
