@@ -21,7 +21,7 @@ const createFactory = (): McpServerFactory => {
     const errorMapper = new McpErrorMapper();
     const validationService = new McpValidationService();
     const apiClient = new ApiClient(config.apiTimeoutMs);
-    const walletService = new WalletService(config.walletPrivateKey);
+    const walletService = new WalletService(config.evmWalletPrivateKey);
 
     const getInstructionsTool = new GetInstructionsTool(errorMapper);
     const getSupportedChainsTool = new GetSupportedChainsTool();

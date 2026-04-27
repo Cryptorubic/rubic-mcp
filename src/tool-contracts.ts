@@ -6,7 +6,7 @@ import { config } from './config.js';
 const blockchain = z.enum(BLOCKCHAIN_NAME).describe('Blockchain value from BLOCKCHAIN_NAME enum, for example ETHEREUM or POLYGON.');
 
 const provider = z.union([z.enum(CROSS_CHAIN_TRADE_TYPE), z.enum(ON_CHAIN_TRADE_TYPE)]);
-const hasWalletPrivateKey = Boolean(config.walletPrivateKey);
+const hasWalletPrivateKey = Boolean(config.evmWalletPrivateKey);
 
 const tokenAddress = z
     .string()
@@ -46,10 +46,10 @@ export const buildSwapTxInputSchema = {
     dstTokenBlockchain: blockchain,
     dstTokenAddress: tokenAddress,
     fromAddress: hasWalletPrivateKey
-        ? z.string().optional().describe('Source sender wallet address (optional when WALLET_PRIVATE_KEY is configured).')
+        ? z.string().optional().describe('Source sender wallet address (optional when EVM_WALLET_PRIVATE_KEY is configured).')
         : z.string().describe('Source sender wallet address (required).'),
     receiver: hasWalletPrivateKey
-        ? z.string().optional().describe('Destination receiver wallet address (optional when WALLET_PRIVATE_KEY is configured).')
+        ? z.string().optional().describe('Destination receiver wallet address (optional when EVM_WALLET_PRIVATE_KEY is configured).')
         : z.string().describe('Destination receiver wallet address (required).'),
     refundAddress: z.string().optional().describe('Optional refund address for deposit-based routes.'),
     slippage: z.number().optional().describe('Slippage tolerance in percents for trade (e.g. 0.02 for 2% slippage).'),

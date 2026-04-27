@@ -19,7 +19,7 @@ type Config = {
     port: number;
     toolTimeoutMs: number;
     transport: 'stdio' | 'http';
-    walletPrivateKey?: `0x${string}`;
+    evmWalletPrivateKey?: `0x${string}`;
 };
 
 const parseNumber = (value: string | undefined, fallback: number): number => {
@@ -43,7 +43,7 @@ const parseWalletPrivateKey = (value: string | undefined): `0x${string}` | undef
     }
 
     if (!/^[A-Fa-f0-9]{64}$/.test(privateKey)) {
-        throw new Error('WALLET_PRIVATE_KEY must be a 64-character hex string without 0x prefix.');
+        throw new Error('EVM_WALLET_PRIVATE_KEY must be a 64-character hex string without 0x prefix.');
     }
 
     return `0x${privateKey}`;
@@ -52,10 +52,10 @@ const parseWalletPrivateKey = (value: string | undefined): `0x${string}` | undef
 export const config: Config = {
     rubicApiBaseUrl: process.env.RUBIC_API_BASE_URL || 'https://rubic-api-v2.rubic.exchange',
     tokensApiBaseUrl: process.env.TOKENS_API_BASE_URL || 'https://api.rubic.exchange/api',
-    apiTimeoutMs: parseNumber(process.env.RUBIC_API_TIMEOUT_MS, 60_000),
+    apiTimeoutMs: parseNumber(process.env.API_TIMEOUT_MS, 60_000),
     host: process.env.MCP_HOST || '127.0.0.1',
     port: parseNumber(process.env.MCP_PORT, 3333),
     toolTimeoutMs: parseNumber(process.env.MCP_TOOL_TIMEOUT_MS, 60_000),
     transport: process.env.MCP_TRANSPORT === 'http' ? 'http' : 'stdio',
-    walletPrivateKey: parseWalletPrivateKey(process.env.WALLET_PRIVATE_KEY)
+    evmWalletPrivateKey: parseWalletPrivateKey(process.env.EVM_WALLET_PRIVATE_KEY)
 };

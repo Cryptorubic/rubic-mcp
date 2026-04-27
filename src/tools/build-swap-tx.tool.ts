@@ -26,7 +26,7 @@ export class BuildSwapTxTool {
 
             if (!fromAddress || !receiver) {
                 throw new Error(
-                    'fromAddress and receiver are required when WALLET_PRIVATE_KEY is not configured. Provide both fields explicitly.'
+                    'fromAddress and receiver are required when EVM_WALLET_PRIVATE_KEY is not configured. Provide both fields explicitly.'
                 );
             }
 

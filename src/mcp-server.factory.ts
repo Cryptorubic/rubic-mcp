@@ -131,7 +131,7 @@ export class McpServerFactory {
         server.registerTool(
             SignTxTool.name,
             {
-                description: 'Sign an EVM transaction using WALLET_PRIVATE_KEY from .env.',
+                description: 'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env.',
                 inputSchema: signTxInputSchema
             },
             async (args) => {
@@ -158,7 +158,7 @@ export class McpServerFactory {
             signAndBroadcastTxToolName,
             {
                 description:
-                    'Sign an EVM transaction using WALLET_PRIVATE_KEY from .env and immediately broadcast it to the selected blockchain network.',
+                    'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env and immediately broadcast it to the selected blockchain network.',
                 inputSchema: signTxInputSchema
             },
             async (args) => {

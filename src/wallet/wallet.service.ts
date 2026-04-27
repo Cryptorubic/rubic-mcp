@@ -12,10 +12,10 @@ type FeeParams =
     | { kind: 'none' };
 
 export class WalletService {
-    constructor(private readonly walletPrivateKey?: Hex) {}
+    constructor(private readonly evmWalletPrivateKey?: Hex) {}
 
     public getWalletAddress(): string | undefined {
-        return this.walletPrivateKey ? privateKeyToAccount(this.walletPrivateKey).address : undefined;
+        return this.evmWalletPrivateKey ? privateKeyToAccount(this.evmWalletPrivateKey).address : undefined;
     }
 
     public async signTransaction(input: SignTxValidatedInput): Promise<SignedTxResponseDto> {
@@ -28,7 +28,7 @@ export class WalletService {
         const normalizedFromAddress = input.fromAddress?.toLowerCase();
 
         if (normalizedFromAddress && normalizedFromAddress !== account.address.toLowerCase()) {
-            throw new Error('fromAddress does not match WALLET_PRIVATE_KEY.');
+            throw new Error('fromAddress does not match EVM_WALLET_PRIVATE_KEY.');
         }
 
         const publicClient = createPublicClient({
@@ -112,11 +112,11 @@ export class WalletService {
     }
 
     private getPrivateKey(): Hex {
-        if (!this.walletPrivateKey) {
-            throw new Error('WALLET_PRIVATE_KEY is not configured. Add it to .env to enable signing tools.');
+        if (!this.evmWalletPrivateKey) {
+            throw new Error('EVM_WALLET_PRIVATE_KEY is not configured. Add it to .env to enable signing tools.');
         }
 
-        return this.walletPrivateKey;
+        return this.evmWalletPrivateKey;
     }
 
     private ensureEvmBlockchain(blockchain: BlockchainName): asserts blockchain is EvmBlockchainName {

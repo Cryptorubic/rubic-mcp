@@ -23,7 +23,7 @@ This MCP server provides a complete flow to:
 
 ### 2. Executing the swap
 
-If `WALLET_PRIVATE_KEY` is configured (server wallet available):
+If `EVM_WALLET_PRIVATE_KEY` is configured (server wallet available):
 
 4. **Recommended one-call flow**: call `rubic_quote_swap_sign_and_broadcast_tx`.
    - This executes quote -> build swap tx -> sign -> broadcast.
@@ -33,7 +33,7 @@ If `WALLET_PRIVATE_KEY` is configured (server wallet available):
    - `rubic_sign_and_broadcast_tx` (or `rubic_sign_tx` -> `rubic_broadcast_tx`)
 6. **Browser fallback**: call `rubic_get_swap_url` only when user asks to review in UI.
 
-If `WALLET_PRIVATE_KEY` is not configured:
+If `EVM_WALLET_PRIVATE_KEY` is not configured:
 
 4. **Build unsigned tx data**: call `rubic_build_swap_tx` with explicit `fromAddress` and `receiver`.
 5. **Share browser execution link**: call `rubic_get_swap_url` after showing quote/routes.
@@ -60,7 +60,7 @@ If `WALLET_PRIVATE_KEY` is not configured:
 
 ## Tools reference
 
-| Tool | Requires `WALLET_PRIVATE_KEY` | Description |
+| Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
 |------|-------------------------------|-------------|
 | `rubic_get_instructions` | No | Returns this guide |
 | `rubic_get_supported_chains` | No | Returns all supported blockchains and chain IDs |
@@ -74,7 +74,7 @@ If `WALLET_PRIVATE_KEY` is not configured:
 | `rubic_track_status` | No | Track cross-chain trade status |
 | `rubic_get_swap_url` | No | Generate pre-filled Rubic swap URL |
 
-\* `rubic_build_swap_tx` works without `WALLET_PRIVATE_KEY`, but then `fromAddress` and `receiver` are required.
+\* `rubic_build_swap_tx` works without `EVM_WALLET_PRIVATE_KEY`, but then `fromAddress` and `receiver` are required.
 
 ## Reading route responses
 
@@ -85,7 +85,7 @@ If `WALLET_PRIVATE_KEY` is not configured:
 ## Common mistakes to avoid
 
 1. **Skipping token/chain validation**: always resolve chain and token context first.
-2. **Forgetting required addresses**: without `WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
+2. **Forgetting required addresses**: without `EVM_WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
 3. **Mixing amount formats**: keep `srcTokenAmount` human-readable decimal string.
 4. **Using wrong native token address**: for native token use Rubic zero address.
 
