@@ -90,16 +90,6 @@ export const trackStatusInputSchema = {
     srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
 };
 
-export const getBalancesInputSchema = {
-    address: hasWalletPrivateKey
-        ? z.string().optional().describe('EVM wallet address to inspect. Defaults to WALLET_PRIVATE_KEY wallet when omitted.')
-        : z.string().describe('EVM wallet address to inspect.'),
-    blockchains: z
-        .array(blockchain)
-        .optional()
-        .describe('Optional list of blockchains to check. Defaults to all supported EVM blockchains.')
-};
-
 export const searchTokensValidationSchema = z.looseObject(searchTokensInputSchema);
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
@@ -114,7 +104,6 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
         });
     }
 });
-export const getBalancesValidationSchema = z.looseObject(getBalancesInputSchema);
 
 export type SearchTokensValidatedInput = z.infer<typeof searchTokensValidationSchema>;
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
@@ -123,4 +112,3 @@ export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
 export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;
 export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignBroadcastValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
-export type GetBalancesValidatedInput = z.infer<typeof getBalancesValidationSchema>;

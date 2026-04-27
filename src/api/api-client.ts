@@ -8,13 +8,7 @@ import {
     SearchTokensValidatedInput,
     TrackStatusValidatedInput
 } from '../tool-contracts.js';
-import {
-    GetBalancesResponseDto,
-    QuoteRoutesOutput,
-    SearchTokensResponseDto,
-    StatusResponseDto,
-    SwapResponseDto
-} from '../types/rubic-api.dto.js';
+import { QuoteRoutesOutput, SearchTokensResponseDto, StatusResponseDto, SwapResponseDto } from '../types/rubic-api.dto.js';
 
 interface BackendToken {
     address: string;
@@ -101,32 +95,5 @@ export class ApiClient {
                 pricate: backendToken.usdPrice
             }))
             .slice(0, input.limit ?? 10);
-    }
-
-    public async getBalances(userAddress: string, blockchains?: BlockchainName[]): Promise<GetBalancesResponseDto> {
-        const response = await this.httpClient.get<{
-            tokens: {
-                [key in BlockchainName]: (BackendToken & { balance: string })[];
-            };
-        }>(config.tokensApiBaseUrl + '/v3/tmp/tokens/get_user_token_balances', {
-            params: {
-                userAddress: userAddress
-            }
-        });
-
-        return {
-            balances: (Object.keys(response.data.tokens) as BlockchainName[])
-                .filter((blockchain) => (blockchains ? blockchains.includes(blockchain) : true))
-                .map((blockchain) => ({
-                    blockchain,
-                    tokens: response.data.tokens[blockchain].map((backendToken) => ({
-                        address: backendToken.address,
-                        balance: backendToken.balance,
-                        decimals: backendToken.decimals,
-                        name: backendToken.name,
-                        symbol: backendToken.symbol
-                    }))
-                }))
-        };
     }
 }

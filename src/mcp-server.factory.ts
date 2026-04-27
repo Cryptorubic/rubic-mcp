@@ -7,7 +7,6 @@ import { toCallToolResult } from './shared/to-call-tool-result.js';
 import {
     broadcastTxInputSchema,
     buildSwapTxInputSchema,
-    getBalancesInputSchema,
     quoteRoutesInputSchema,
     quoteSwapSignBroadcastInputSchema,
     searchTokensInputSchema,
@@ -16,7 +15,6 @@ import {
 } from './tool-contracts.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
-import { GetBalancesTool } from './tools/get-balances.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SearchTokensTool } from './tools/search-tokens.tool.js';
@@ -40,7 +38,6 @@ export class McpServerFactory {
         private readonly searchTokensTool: SearchTokensTool,
         private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
-        private readonly getBalancesTool: GetBalancesTool,
         private readonly timeoutMs: number
     ) {
         this.walletAddress = this.walletService.getWalletAddress();
@@ -234,22 +231,6 @@ export class McpServerFactory {
             async (args) => {
                 const result = await this.executeWithTelemetry(TrackStatusTool.name, () =>
                     this.trackStatusTool.execute(args, randomUUID())
-                );
-                return toCallToolResult(result);
-            }
-        );
-
-        server.registerTool(
-            GetBalancesTool.name,
-            {
-                description: this.walletAddress
-                    ? `Check native token balances for EVM networks. If address is omitted, ${this.walletAddress} is used. Returns non-zero balances only.`
-                    : 'Check native token balances for EVM networks. Requires wallet address. Returns non-zero balances only.',
-                inputSchema: getBalancesInputSchema
-            },
-            async (args) => {
-                const result = await this.executeWithTelemetry(GetBalancesTool.name, () =>
-                    this.getBalancesTool.execute(args, randomUUID())
                 );
                 return toCallToolResult(result);
             }
