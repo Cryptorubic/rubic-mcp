@@ -17,8 +17,8 @@ Pick **one** option:
 Requires [Node.js v18+](https://nodejs.org/).
 
 ```bash
-git clone https://github.com/Cryptorubic/rubic-public-mcp.git
-cd rubic-public-mcp
+git clone https://github.com/Cryptorubic/rubic-mcp.git
+cd rubic-mcp
 npm install
 npm run build
 ```
@@ -28,15 +28,15 @@ npm run build
 Pull the published image:
 
 ```bash
-docker pull rubic/rubic-public-mcp:latest
+docker pull rubic/rubic-mcp:latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/Cryptorubic/rubic-public-mcp.git
-cd rubic-public-mcp
-docker build -t rubic-public-mcp .
+git clone https://github.com/Cryptorubic/rubic-mcp.git
+cd rubic-mcp
+docker build -t rubic/rubic-mcp .
 ```
 
 ## Configuration
@@ -69,16 +69,16 @@ Replace `/full/path/to` with the actual path printed after `npm run build`.
 
 ```bash
 # With private key
-claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- node /full/path/to/rubic-public-mcp/dist/index.js
+claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- node /full/path/to/dist/index.js
 
 # Read-only / unsigned mode
-claude mcp add rubic -- node /full/path/to/rubic-public-mcp/dist/index.js
+claude mcp add rubic -- node /full/path/to/dist/index.js
 ```
 
 Using Docker:
 
 ```bash
-claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- docker run -i --rm rubic/rubic-public-mcp:latest node dist/index.js
+claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- docker run -i --rm rubic/rubic-mcp:latest node dist/index.js
 ```
 
 Verify: `claude mcp list`
@@ -109,7 +109,7 @@ Docker:
   "mcpServers": {
     "rubic": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-e", "EVM_WALLET_PRIVATE_KEY=YOUR_KEY", "rubic/rubic-public-mcp", "node", "dist/index.js"],
+      "args": ["run", "-i", "--rm", "-e", "EVM_WALLET_PRIVATE_KEY=YOUR_KEY", "rubic/rubic-mcp", "node", "dist/index.js"],
       "env": {}
     }
   }
@@ -128,7 +128,7 @@ Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
   "mcpServers": {
     "rubic": {
       "command": "node",
-      "args": ["/full/path/to/rubic-public-mcp/dist/index.js"],
+      "args": ["/full/path/to/dist/index.js"],
       "env": {
         "EVM_WALLET_PRIVATE_KEY": "YOUR_PRIVATE_KEY"
       }
@@ -240,10 +240,10 @@ Add to `~/.config/zed/settings.json`:
 
 ### Other clients (generic stdio)
 
-Use command `node` + args `["/full/path/to/rubic-public-mcp/dist/index.js"]`, or Docker command:
+Use command `node` + args `["/full/path/to/dist/index.js"]`, or Docker command:
 
 ```bash
-docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-public-mcp:latest node dist/index.js
+docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-mcp:latest node dist/index.js
 ```
 
 ## Hosted MCP (Stage)
@@ -280,10 +280,10 @@ MCP_TRANSPORT=http npm run start:http
 
 ```bash
 # stdio
-docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-public-mcp:latest node dist/index.js
+docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-mcp:latest node dist/index.js
 
 # HTTP mode
-docker run -d -p 3333:3333 -e MCP_TRANSPORT=http rubic/rubic-public-mcp:latest
+docker run -d -p 3333:3333 -e MCP_TRANSPORT=http rubic/rubic-mcp:latest
 ```
 
 Or with Docker Compose:
