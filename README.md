@@ -336,6 +336,27 @@ are available.
 | `rubic_track_status` | - | Tracks cross-chain status by route id and/or tx hash |
 | `rubic_get_swap_url` | - | Generates pre-filled Rubic app swap URL |
 
+## Limitations
+
+Rubic MCP Server does **not**:
+
+- **Custody or store private keys.** Keys exist only in your local env / process memory.
+- **Support non-EVM chains for signing.** `rubic_sign_tx` and `rubic_broadcast_tx`
+  work only on EVM chains. For non-EVM chains (Solana, TRON, TON, Bitcoin),
+  use `rubic_build_swap_tx` to get calldata and sign externally,
+  or use `rubic_get_swap_url` for browser-based execution.
+- **Execute limit orders or DCA.** Only market swaps via routing aggregation.
+- **Provide portfolio balances.** Use a dedicated balance-checking tool or
+  block explorer.
+- **Simulate transactions before execution.** Swap outcomes are estimated
+  via `rubic_quote_routes`; there is no on-chain simulation step.
+- **Manage token approvals automatically.** If an ERC-20 approval is needed,
+  `rubic_build_swap_tx` returns `approvalAddress` — the user must approve
+  separately.
+- **Guarantee price.** Quotes are estimates; actual execution price may differ
+  due to slippage, MEV, or market movement between quote and broadcast.
+- **Support fiat on/off-ramp.** No bank, card, or payment provider integration.
+
 ## Response format
 
 All tools return a stable result envelope:

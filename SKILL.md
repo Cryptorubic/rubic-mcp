@@ -93,6 +93,17 @@ are available.
 - If using all-in-one flow, `selectedRouteId` is optional; best route is used by default.
 - For explicit route control, pass `selectedRouteId`.
 
+## What this server does NOT do
+
+- Does not custody private keys — signing is local, opt-in, in-process only.
+- Does not sign non-EVM transactions (Solana, TRON, TON, Bitcoin) —
+  use `rubic_build_swap_tx` + external signing, or `rubic_get_swap_url`.
+- Does not execute limit orders or DCA — market swaps only.
+- Does not simulate transactions on-chain — use `rubic_quote_routes` for estimates.
+- Does not manage ERC-20 approvals — check `approvalAddress` in build response.
+- Does not provide wallet balances — use a separate balance tool.
+- Does not guarantee execution price — quotes are estimates subject to slippage.
+
 ## Common mistakes to avoid
 
 1. **Skipping token/chain validation**: always resolve chain and token context first.
