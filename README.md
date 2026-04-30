@@ -4,13 +4,33 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-8A2BE2)](https://modelcontextprotocol.io)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Docker](https://img.shields.io/badge/Docker-Hub-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/rubic/rubic-public-mcp)
+[![Docker](https://img.shields.io/badge/Docker-Hub-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/rubicfinance/rubic-mcp)
 
 A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for [Rubic](https://rubic.exchange) that enables AI agents to search supported chains/tokens, build swap transactions, sign and broadcast EVM transactions, track cross-chain status, and generate pre-filled swap URLs.
 
-## Installation
+## Quickstart
 
-Pick **one** option:
+Add to MCP config:
+
+```json
+{
+  "mcpServers": {
+    "rubic": {
+      "command": "npx",
+      "args": ["-y", "@cryptorubic/mcp"],
+      "env": {
+        "EVM_WALLET_PRIVATE_KEY": "YOUR_PRIVATE_KEY"
+      }
+    }
+  }
+}
+```
+
+`EVM_WALLET_PRIVATE_KEY` - EVM private key without `0x`. Enables signing/broadcast tools.
+
+## Local Installation Options
+
+For read-only mode, omit `EVM_WALLET_PRIVATE_KEY`.
 
 ### Option A: Node.js
 
@@ -41,7 +61,7 @@ docker build -t rubicfinance/rubic-mcp .
 
 ## Configuration
 
-Copy the example config:
+In case of local Node.js installation, copy the example config:
 
 ```bash
 cp .env.example .env
@@ -59,6 +79,8 @@ Main settings:
 Without `EVM_WALLET_PRIVATE_KEY`, read-only and build tools work, but tools that sign transactions will return an error.
 
 ## Connecting to MCP Clients
+
+[Quickstart](#quickstart) section is enough for the most use cases. All of the instructions below are related to local installation options.
 
 All examples below use **stdio** mode.
 
