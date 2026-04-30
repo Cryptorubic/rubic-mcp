@@ -28,7 +28,7 @@ npm run build
 Pull the published image:
 
 ```bash
-docker pull rubic/rubic-mcp:latest
+docker pull rubicfinance/rubic-mcp:latest
 ```
 
 Or build from source:
@@ -36,7 +36,7 @@ Or build from source:
 ```bash
 git clone https://github.com/Cryptorubic/rubic-mcp.git
 cd rubic-mcp
-docker build -t rubic/rubic-mcp .
+docker build -t rubicfinance/rubic-mcp .
 ```
 
 ## Configuration
@@ -78,7 +78,7 @@ claude mcp add rubic -- node /full/path/to/dist/index.js
 Using Docker:
 
 ```bash
-claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- docker run -i --rm rubic/rubic-mcp:latest node dist/index.js
+claude mcp add rubic -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY -- docker run -i --rm rubicfinance/rubic-mcp:latest node dist/index.js
 ```
 
 Verify: `claude mcp list`
@@ -109,7 +109,7 @@ Docker:
   "mcpServers": {
     "rubic": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-e", "EVM_WALLET_PRIVATE_KEY=YOUR_KEY", "rubic/rubic-mcp", "node", "dist/index.js"],
+      "args": ["run", "-i", "--rm", "-e", "EVM_WALLET_PRIVATE_KEY=YOUR_KEY", "rubicfinance/rubic-mcp", "node", "dist/index.js"],
       "env": {}
     }
   }
@@ -243,7 +243,7 @@ Add to `~/.config/zed/settings.json`:
 Use command `node` + args `["/full/path/to/dist/index.js"]`, or Docker command:
 
 ```bash
-docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-mcp:latest node dist/index.js
+docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubicfinance/rubic-mcp:latest node dist/index.js
 ```
 
 ## Hosted MCP (Stage)
@@ -280,10 +280,10 @@ MCP_TRANSPORT=http npm run start:http
 
 ```bash
 # stdio
-docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubic/rubic-mcp:latest node dist/index.js
+docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubicfinance/rubic-mcp:latest node dist/index.js
 
 # HTTP mode
-docker run -d -p 3333:3333 -e MCP_TRANSPORT=http rubic/rubic-mcp:latest
+docker run -d -p 3333:3333 -e MCP_TRANSPORT=http rubicfinance/rubic-mcp:latest
 ```
 
 Or with Docker Compose:
