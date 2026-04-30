@@ -375,6 +375,22 @@ All tools return a stable result envelope:
 }
 ```
 
+## Error Codes
+
+| Code | Meaning |
+|------|---------|
+| `QUOTE_ROUTES_FAILED` | Rubic API could not calculate any route for the given pair |
+| `ROUTE_ID_NOT_FOUND` | Route id could not be extracted from quote response |
+| `BUILD_SWAP_TX_FAILED` | Transaction construction failed for the selected route |
+| `SIGN_TX_FAILED` | Transaction signing failed (key mismatch, invalid tx) |
+| `BROADCAST_TX_FAILED` | Signed transaction rejected by the network |
+| `WALLET_NOT_CONFIGURED` | Tool requires EVM_WALLET_PRIVATE_KEY but it is not set |
+| `TOOL_TIMEOUT` | Tool execution exceeded configured timeout |
+| `HTTP_400` | Input validation failed |
+| `HTTP_NETWORK` | Network request to Rubic API failed |
+| `RUBIC_<N>` | Rubic API business error (code forwarded from API response) |
+| `INTERNAL_ERROR` | Unexpected server error |
+
 ## License
 
 [MIT](LICENSE)
