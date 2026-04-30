@@ -1,0 +1,40 @@
+# Rubic MCP Server
+
+> MCP server for Rubic that lets AI agents discover chains/tokens, quote routes, build swap transactions, and optionally sign/broadcast EVM transactions.
+
+This file is an LLM-friendly index of the most important documentation and source files in this repository.
+
+## Project
+
+- [Repository README](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md): Main documentation, setup, tools, security model, and limitations.
+- [NPM Package](https://www.npmjs.com/package/@cryptorubic/mcp): Published package metadata and installation entrypoint.
+- [License](https://github.com/Cryptorubic/rubic-mcp/blob/main/LICENSE): MIT license.
+
+## Getting Started
+
+- [Quickstart](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#quickstart): Fastest way to add Rubic MCP to an MCP client.
+- [Local Installation Options](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#local-installation-options): Node.js and Docker setup.
+- [Configuration](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#configuration): Environment variables and transport settings.
+- [Connecting to MCP Clients](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#connecting-to-mcp-clients): Client-specific config examples.
+
+## API and Tools
+
+- [Tools Overview](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#tools): Full list of MCP tools and key requirements.
+- [Response Format](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#response-format): Stable result envelope used by all tools.
+- [Error Codes](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#error-codes): Common failures and their meanings.
+
+## Security and Operational Notes
+
+- [Security Model](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#security-model): Non-custodial behavior and key handling.
+- [Limitations](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#limitations): Scope boundaries and unsupported operations.
+
+## Implementation Files
+
+- [MCP tool contracts](https://github.com/Cryptorubic/rubic-mcp/blob/main/src/tool-contracts.ts): Shared schemas and interfaces for tools.
+- [Quote routes tool](https://github.com/Cryptorubic/rubic-mcp/blob/main/src/tools/quote-routes.tool.ts): Route quoting implementation.
+- [Build swap transaction tool](https://github.com/Cryptorubic/rubic-mcp/blob/main/src/tools/build-swap-tx.tool.ts): Transaction construction implementation.
+
+## Optional
+
+- [Hosted MCP (Stage)](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#hosted-mcp-stage): Read-only hosted endpoint for testing.
+- [Development scripts](https://github.com/Cryptorubic/rubic-mcp/blob/main/README.md#development): Local dev, lint, and typecheck commands.
