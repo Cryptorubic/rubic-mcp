@@ -301,6 +301,21 @@ npm run lint
 npm run typecheck
 ```
 
+## Security Model
+
+Rubic MCP Server is non-custodial:
+
+- **Private keys never leave your machine.** `EVM_WALLET_PRIVATE_KEY` is read from
+  a local `.env` file or MCP client config, used for in-process signing via
+  [viem](https://viem.sh), and never transmitted over the network.
+- **The server constructs transaction calldata** (`rubic_build_swap_tx`) and returns
+  it as a structured JSON object. Signing and broadcast are separate, opt-in steps.
+- **Without `EVM_WALLET_PRIVATE_KEY`**, the server operates in read-only mode: quotes,
+  token search, chain discovery, and swap URL generation work normally.
+  Signing tools return a clear error.
+- **The Rubic API** (`rubic-api-v2.rubic.exchange`) receives swap parameters and
+  returns routing + calldata. It never receives your private key.
+
 ## Tools
 
 | Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |

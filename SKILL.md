@@ -11,6 +11,13 @@ This MCP server provides a complete flow to:
 - optionally sign and broadcast transactions with server-side wallet
 - track cross-chain swap status
 
+## Security
+
+This server is non-custodial. Private keys are never transmitted — signing happens
+locally in-process via viem. The Rubic API receives swap parameters and returns
+calldata; it never touches keys. Without `EVM_WALLET_PRIVATE_KEY`, the server runs
+in read-only mode (quotes, search, chain discovery only).
+
 ## Workflow
 
 ### 1. Getting a quote (no wallet required)
