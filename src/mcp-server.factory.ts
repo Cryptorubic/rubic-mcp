@@ -128,119 +128,121 @@ export class McpServerFactory {
             }
         );
 
-        server.registerTool(
-            SignTxTool.name,
-            {
-                description: 'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env.',
-                inputSchema: signTxInputSchema
-            },
-            async (args) => {
-                const result = await this.executeWithTelemetry(SignTxTool.name, () => this.signTxTool.execute(args, randomUUID()));
-                return toCallToolResult(result);
-            }
-        );
+        if (this.walletAddress) {
+            server.registerTool(
+                SignTxTool.name,
+                {
+                    description: 'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env.',
+                    inputSchema: signTxInputSchema
+                },
+                async (args) => {
+                    const result = await this.executeWithTelemetry(SignTxTool.name, () => this.signTxTool.execute(args, randomUUID()));
+                    return toCallToolResult(result);
+                }
+            );
 
-        server.registerTool(
-            BroadcastTxTool.name,
-            {
-                description: 'Broadcast a raw signed EVM transaction to the selected blockchain network.',
-                inputSchema: broadcastTxInputSchema
-            },
-            async (args) => {
-                const result = await this.executeWithTelemetry(BroadcastTxTool.name, () =>
-                    this.broadcastTxTool.execute(args, randomUUID())
-                );
-                return toCallToolResult(result);
-            }
-        );
-
-        server.registerTool(
-            signAndBroadcastTxToolName,
-            {
-                description:
-                    'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env and immediately broadcast it to the selected blockchain network.',
-                inputSchema: signTxInputSchema
-            },
-            async (args) => {
-                const result = await this.executeWithTelemetry(signAndBroadcastTxToolName, () => this.executeSignAndBroadcastTx(args));
-                return toCallToolResult(result);
-            }
-        );
-
-        server.registerTool(
-            quoteSwapSignAndBroadcastTxToolName,
-            {
-                description:
-                    'Execute full flow quote -> build swap tx -> sign -> broadcast. Uses best route by default, or selectedRouteId when provided.',
-                inputSchema: quoteSwapSignBroadcastInputSchema
-            },
-            async (args) => {
-                const result = await this.executeWithTelemetry(quoteSwapSignAndBroadcastTxToolName, async () => {
-                    const quoteResult = await this.quoteRoutesTool.execute(args, randomUUID());
-
-                    if (!quoteResult.ok || !quoteResult.data) {
-                        return {
-                            error: quoteResult.error ?? {
-                                code: 'QUOTE_ROUTES_FAILED',
-                                message: 'Failed to calculate routes.'
-                            },
-                            ok: false,
-                            traceId: quoteResult.traceId
-                        };
-                    }
-
-                    const payload = args as Record<string, unknown>;
-                    const selectedRouteId = typeof payload.selectedRouteId === 'string' ? payload.selectedRouteId : undefined;
-                    const routeId = selectedRouteId ?? this.extractRouteIdFromQuoteResult(quoteResult.data.result);
-
-                    if (!routeId) {
-                        return {
-                            error: {
-                                code: 'ROUTE_ID_NOT_FOUND',
-                                message: 'Unable to resolve route id from quote response. Set selectedRouteId explicitly.'
-                            },
-                            ok: false,
-                            traceId: randomUUID()
-                        };
-                    }
-
-                    const swapResult = await this.buildSwapTxTool.execute(
-                        {
-                            id: routeId,
-                            srcTokenBlockchain: payload.srcTokenBlockchain,
-                            srcTokenAddress: payload.srcTokenAddress,
-                            srcTokenAmount: payload.srcTokenAmount,
-                            dstTokenBlockchain: payload.dstTokenBlockchain,
-                            dstTokenAddress: payload.dstTokenAddress,
-                            fromAddress: payload.fromAddress,
-                            receiver: payload.receiver,
-                            refundAddress: payload.refundAddress,
-                            enableChecks: payload.enableChecks,
-                            signature: payload.signature
-                        },
-                        randomUUID()
+            server.registerTool(
+                BroadcastTxTool.name,
+                {
+                    description: 'Broadcast a raw signed EVM transaction to the selected blockchain network.',
+                    inputSchema: broadcastTxInputSchema
+                },
+                async (args) => {
+                    const result = await this.executeWithTelemetry(BroadcastTxTool.name, () =>
+                        this.broadcastTxTool.execute(args, randomUUID())
                     );
+                    return toCallToolResult(result);
+                }
+            );
 
-                    if (!swapResult.ok || !swapResult.data) {
-                        return {
-                            error: swapResult.error ?? {
-                                code: 'BUILD_SWAP_TX_FAILED',
-                                message: 'Failed to build swap transaction.'
+            server.registerTool(
+                signAndBroadcastTxToolName,
+                {
+                    description:
+                        'Sign an EVM transaction using EVM_WALLET_PRIVATE_KEY from .env and immediately broadcast it to the selected blockchain network.',
+                    inputSchema: signTxInputSchema
+                },
+                async (args) => {
+                    const result = await this.executeWithTelemetry(signAndBroadcastTxToolName, () => this.executeSignAndBroadcastTx(args));
+                    return toCallToolResult(result);
+                }
+            );
+
+            server.registerTool(
+                quoteSwapSignAndBroadcastTxToolName,
+                {
+                    description:
+                        'Execute full flow quote -> build swap tx -> sign -> broadcast. Uses best route by default, or selectedRouteId when provided.',
+                    inputSchema: quoteSwapSignBroadcastInputSchema
+                },
+                async (args) => {
+                    const result = await this.executeWithTelemetry(quoteSwapSignAndBroadcastTxToolName, async () => {
+                        const quoteResult = await this.quoteRoutesTool.execute(args, randomUUID());
+
+                        if (!quoteResult.ok || !quoteResult.data) {
+                            return {
+                                error: quoteResult.error ?? {
+                                    code: 'QUOTE_ROUTES_FAILED',
+                                    message: 'Failed to calculate routes.'
+                                },
+                                ok: false,
+                                traceId: quoteResult.traceId
+                            };
+                        }
+
+                        const payload = args as Record<string, unknown>;
+                        const selectedRouteId = typeof payload.selectedRouteId === 'string' ? payload.selectedRouteId : undefined;
+                        const routeId = selectedRouteId ?? this.extractRouteIdFromQuoteResult(quoteResult.data.result);
+
+                        if (!routeId) {
+                            return {
+                                error: {
+                                    code: 'ROUTE_ID_NOT_FOUND',
+                                    message: 'Unable to resolve route id from quote response. Set selectedRouteId explicitly.'
+                                },
+                                ok: false,
+                                traceId: randomUUID()
+                            };
+                        }
+
+                        const swapResult = await this.buildSwapTxTool.execute(
+                            {
+                                id: routeId,
+                                srcTokenBlockchain: payload.srcTokenBlockchain,
+                                srcTokenAddress: payload.srcTokenAddress,
+                                srcTokenAmount: payload.srcTokenAmount,
+                                dstTokenBlockchain: payload.dstTokenBlockchain,
+                                dstTokenAddress: payload.dstTokenAddress,
+                                fromAddress: payload.fromAddress,
+                                receiver: payload.receiver,
+                                refundAddress: payload.refundAddress,
+                                enableChecks: payload.enableChecks,
+                                signature: payload.signature
                             },
-                            ok: false,
-                            traceId: swapResult.traceId
-                        };
-                    }
+                            randomUUID()
+                        );
 
-                    return this.executeSignAndBroadcastTx({
-                        blockchain: swapResult.data.quote.srcTokenBlockchain,
-                        fromAddress: swapResult.data.quote.fromAddress,
-                        transaction: swapResult.data.transaction
+                        if (!swapResult.ok || !swapResult.data) {
+                            return {
+                                error: swapResult.error ?? {
+                                    code: 'BUILD_SWAP_TX_FAILED',
+                                    message: 'Failed to build swap transaction.'
+                                },
+                                ok: false,
+                                traceId: swapResult.traceId
+                            };
+                        }
+
+                        return this.executeSignAndBroadcastTx({
+                            blockchain: swapResult.data.quote.srcTokenBlockchain,
+                            fromAddress: swapResult.data.quote.fromAddress,
+                            transaction: swapResult.data.transaction
+                        });
                     });
-                });
-                return toCallToolResult(result);
-            }
-        );
+                    return toCallToolResult(result);
+                }
+            );
+        }
 
         server.registerTool(
             TrackStatusTool.name,

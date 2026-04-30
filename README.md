@@ -318,6 +318,10 @@ Rubic MCP Server is non-custodial:
 
 ## Tools
 
+Tools are split into **read-only** (work without a key) and **execution**
+(require `EVM_WALLET_PRIVATE_KEY`). In hosted mode, only read-only tools
+are available.
+
 | Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
 |------|:---------------------------------:|-------------|
 | `rubic_get_instructions` | - | Returns Rubic MCP usage guide and workflow tips |
