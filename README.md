@@ -350,6 +350,7 @@ are available.
 | `rubic_get_supported_chains` | - | Lists supported blockchain names |
 | `rubic_search_tokens` | - | Searches tokens by symbol, name, or address |
 | `rubic_quote_routes` | - | Calculates best route or all routes |
+| `rubic_simulate_swap` | - | Simulates execution preview (route, fees summary, gas USD, risk level) without signing or broadcasting |
 | `rubic_build_swap_tx` | - | Builds executable swap transaction payload |
 | `rubic_sign_tx` | Yes | Signs EVM transaction payload |
 | `rubic_broadcast_tx` | - | Broadcasts a signed raw transaction |
@@ -370,8 +371,6 @@ Rubic MCP Server does **not**:
 - **Execute limit orders or DCA.** Only market swaps via routing aggregation.
 - **Provide portfolio balances.** Use a dedicated balance-checking tool or
   block explorer.
-- **Simulate transactions before execution.** Swap outcomes are estimated
-  via `rubic_quote_routes`; there is no on-chain simulation step.
 - **Manage token approvals automatically.** If an ERC-20 approval is needed,
   `rubic_build_swap_tx` returns `approvalAddress` — the user must approve
   separately.

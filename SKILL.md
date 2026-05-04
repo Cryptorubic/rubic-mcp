@@ -27,24 +27,26 @@ in read-only mode (quotes, search, chain discovery only).
 3. **Get routes**: call `rubic_quote_routes`.
    - Use `routeMode: "best"` for one best route.
    - Use `routeMode: "all"` to inspect candidates.
+4. **Simulate execution preview**: call `rubic_simulate_swap` when you need fee/risk summary without signing or broadcasting.
 
 ### 2. Executing the swap
 
 If `EVM_WALLET_PRIVATE_KEY` is configured (server wallet available):
 
-4. **Recommended one-call flow**: call `rubic_quote_swap_sign_and_broadcast_tx`.
+5. **Recommended one-call flow**: call `rubic_quote_swap_sign_and_broadcast_tx`.
    - This executes quote -> build swap tx -> sign -> broadcast.
-5. **Step-by-step flow** (if you need inspection):
+6. **Step-by-step flow** (if you need inspection):
    - `rubic_quote_routes`
+   - `rubic_simulate_swap` (optional)
    - `rubic_build_swap_tx`
    - `rubic_sign_and_broadcast_tx` (or `rubic_sign_tx` -> `rubic_broadcast_tx`)
-6. **Browser fallback**: call `rubic_get_swap_url` only when user asks to review in UI.
+7. **Browser fallback**: call `rubic_get_swap_url` only when user asks to review in UI.
 
 If `EVM_WALLET_PRIVATE_KEY` is not configured:
 
-4. **Build unsigned tx data**: call `rubic_build_swap_tx` with explicit `fromAddress` and `receiver`.
-5. **Share browser execution link**: call `rubic_get_swap_url` after showing quote/routes.
-6. **External signing path**: user signs externally, then you can broadcast via `rubic_broadcast_tx` if they provide a raw signed tx.
+5. **Build unsigned tx data**: call `rubic_build_swap_tx` with explicit `fromAddress` and `receiver`.
+6. **Share browser execution link**: call `rubic_get_swap_url` after showing quote/routes.
+7. **External signing path**: user signs externally, then you can broadcast via `rubic_broadcast_tx` if they provide a raw signed tx.
 
 ### 3. Tracking swap status
 
@@ -77,6 +79,7 @@ are available.
 | `rubic_get_supported_chains` | No | Returns all supported blockchains and chain IDs |
 | `rubic_search_tokens` | No | Search tokens by name, symbol, or address |
 | `rubic_quote_routes` | No | Calculate swap routes (best or all) |
+| `rubic_simulate_swap` | No | Simulate execution preview (fees summary, gas USD, risk level) without signing |
 | `rubic_build_swap_tx` | No* | Build executable swap transaction data from route id |
 | `rubic_sign_tx` | Yes | Sign an EVM transaction with server wallet |
 | `rubic_broadcast_tx` | No | Broadcast raw signed EVM transaction |
@@ -99,7 +102,7 @@ are available.
 - Does not sign non-EVM transactions (Solana, TRON, TON, Bitcoin) —
   use `rubic_build_swap_tx` + external signing, or `rubic_get_swap_url`.
 - Does not execute limit orders or DCA — market swaps only.
-- Does not simulate transactions on-chain — use `rubic_quote_routes` for estimates.
+- Does not run full EVM call/staticcall simulation — `rubic_simulate_swap` provides quote/build-based execution preview only.
 - Does not manage ERC-20 approvals — check `approvalAddress` in build response.
 - Does not provide wallet balances — use a separate balance tool.
 - Does not guarantee execution price — quotes are estimates subject to slippage.
@@ -114,6 +117,7 @@ are available.
 ## Tips
 
 - Start with `rubic_quote_routes` to present best execution options.
+- Use `rubic_simulate_swap` before execution when user asks for a risk or fee preview.
 - Prefer `rubic_quote_swap_sign_and_broadcast_tx` when server wallet is configured.
 - Use step-by-step flow when user needs transaction transparency or external signing.
 - Provide `rubic_get_swap_url` as browser fallback, especially when server wallet is unavailable.

@@ -12,6 +12,7 @@ import {
     quoteSwapSignBroadcastInputSchema,
     searchTokensInputSchema,
     signTxInputSchema,
+    simulateSwapInputSchema,
     trackStatusInputSchema
 } from './tool-contracts.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
@@ -22,6 +23,7 @@ import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
+import { SimulateSwapTool } from './tools/simulate-swap.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
 import { BroadcastTxResponseDto, QuoteAllDto, QuoteResponseDto } from './types/api.dto.js';
 import { WalletService } from './wallet/wallet.service.js';
@@ -39,6 +41,7 @@ export class McpServerFactory {
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
         private readonly quoteRoutesTool: QuoteRoutesTool,
+        private readonly simulateSwapTool: SimulateSwapTool,
         private readonly searchTokensTool: SearchTokensTool,
         private readonly signTxTool: SignTxTool,
         private readonly trackStatusTool: TrackStatusTool,
@@ -123,6 +126,21 @@ export class McpServerFactory {
             async (args) => {
                 const result = await this.executeWithTelemetry(BuildSwapTxTool.name, () =>
                     this.buildSwapTxTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            SimulateSwapTool.name,
+            {
+                description:
+                    'Simulate swap execution without signing or broadcasting. Returns selected route, estimated output, fees summary, and risk level.',
+                inputSchema: simulateSwapInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(SimulateSwapTool.name, () =>
+                    this.simulateSwapTool.execute(args, randomUUID())
                 );
                 return toCallToolResult(result);
             }

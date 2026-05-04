@@ -88,6 +88,16 @@ export const quoteSwapSignBroadcastInputSchema = {
     signature: z.string().optional().describe('Optional wallet signature for auth-enabled providers.')
 };
 
+export const simulateSwapInputSchema = {
+    ...quoteRoutesInputSchema,
+    selectedRouteId: z.string().optional().describe('Optional explicit route id from quote response. If not provided, best route is used.'),
+    includeBuild: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe('Whether to call rubic_build_swap_tx internally for more accurate execution preview. Default is true.')
+};
+
 export const trackStatusInputSchema = {
     id: z.string().optional().describe('Rubic route id from swap response.'),
     srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
@@ -107,6 +117,7 @@ export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema)
 export const signTxValidationSchema = z.looseObject(signTxInputSchema);
 export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
 export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
+export const simulateSwapValidationSchema = z.looseObject(simulateSwapInputSchema);
 export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
     if (!value.id && !value.srcTxHash) {
         ctx.addIssue({
@@ -123,5 +134,6 @@ export type BuildSwapTxValidatedInput = z.infer<typeof buildSwapTxValidationSche
 export type SignTxValidatedInput = z.infer<typeof signTxValidationSchema>;
 export type BroadcastTxValidatedInput = z.infer<typeof broadcastTxValidationSchema>;
 export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignBroadcastValidationSchema>;
+export type SimulateSwapValidatedInput = z.infer<typeof simulateSwapValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
 export type GetSwapUrlValidatedInput = z.infer<typeof getSwapUrlValidationSchema>;

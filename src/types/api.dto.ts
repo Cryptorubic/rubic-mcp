@@ -203,6 +203,26 @@ export interface QuoteRoutesOutput {
     result: QuoteAllDto | QuoteResponseDto;
 }
 
+export type SimulationRiskLevel = 'low' | 'medium' | 'high';
+
+export interface SimulateSwapOutput {
+    quote: QuoteResponseDto;
+    swap: SwapResponseDto | null;
+    summary: {
+        routeId: string;
+        riskLevel: SimulationRiskLevel;
+        reasons: string[];
+        totalCostUsd: number;
+        expectedOutputAmount: string;
+        expectedOutputMinAmount: string;
+        expectedOutputUsd: number | null;
+        estimatedGasUsd: number | null;
+        durationInMinutes: number;
+        priceImpact: number | null;
+        slippage: number;
+    };
+}
+
 export interface SwapResponseDto {
     quote: SwapRequestDto;
     estimate: EstimatesDto;

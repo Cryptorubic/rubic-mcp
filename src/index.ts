@@ -16,6 +16,7 @@ import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
 import { QuoteRoutesTool } from './tools/quote-routes.tool.js';
 import { SearchTokensTool } from './tools/search-tokens.tool.js';
 import { SignTxTool } from './tools/sign-tx.tool.js';
+import { SimulateSwapTool } from './tools/simulate-swap.tool.js';
 import { TrackStatusTool } from './tools/track-status.tool.js';
 import { WalletService } from './wallet/wallet.service.js';
 
@@ -29,6 +30,7 @@ const createFactory = (): McpServerFactory => {
     const getSupportedChainsTool = new GetSupportedChainsTool();
     const searchTokensTool = new SearchTokensTool(errorMapper, apiClient, validationService);
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
+    const simulateSwapTool = new SimulateSwapTool(errorMapper, apiClient, validationService, walletService);
     const buildSwapTxTool = new BuildSwapTxTool(errorMapper, apiClient, validationService, walletService);
     const signTxTool = new SignTxTool(errorMapper, validationService, walletService);
     const broadcastTxTool = new BroadcastTxTool(errorMapper, validationService, walletService);
@@ -42,6 +44,7 @@ const createFactory = (): McpServerFactory => {
         buildSwapTxTool,
         broadcastTxTool,
         quoteRoutesTool,
+        simulateSwapTool,
         searchTokensTool,
         signTxTool,
         trackStatusTool,
