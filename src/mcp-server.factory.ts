@@ -7,6 +7,7 @@ import { toCallToolResult } from './shared/to-call-tool-result.js';
 import {
     broadcastTxInputSchema,
     buildSwapTxInputSchema,
+    getBalancesInputSchema,
     getSwapUrlInputSchema,
     quoteRoutesInputSchema,
     quoteSwapSignBroadcastInputSchema,
@@ -17,6 +18,7 @@ import {
 } from './tool-contracts.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { GetBalancesTool } from './tools/get-balances.tool.js';
 import { GetInstructionsTool } from './tools/get-instructions.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
@@ -37,6 +39,7 @@ export class McpServerFactory {
     constructor(
         private readonly walletService: WalletService,
         private readonly getInstructionsTool: GetInstructionsTool,
+        private readonly getBalancesTool: GetBalancesTool,
         private readonly getSupportedChainsTool: GetSupportedChainsTool,
         private readonly buildSwapTxTool: BuildSwapTxTool,
         private readonly broadcastTxTool: BroadcastTxTool,
@@ -96,6 +99,22 @@ export class McpServerFactory {
             async (args) => {
                 const result = await this.executeWithTelemetry(SearchTokensTool.name, () =>
                     this.searchTokensTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
+
+        server.registerTool(
+            GetBalancesTool.name,
+            {
+                description: this.walletAddress
+                    ? `Check token balances for wallet across supported EVM chains. Returns only non-zero balances. Defaults to server wallet ${this.walletAddress}.`
+                    : 'Check token balances for wallet across supported EVM chains. Returns only non-zero balances.',
+                inputSchema: getBalancesInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(GetBalancesTool.name, () =>
+                    this.getBalancesTool.execute(args, randomUUID())
                 );
                 return toCallToolResult(result);
             }

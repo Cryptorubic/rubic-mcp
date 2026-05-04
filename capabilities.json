@@ -4,6 +4,7 @@
   "description": "Chain x action capability matrix for Rubic MCP tools.",
   "actions": [
     "rubic_get_instructions",
+    "rubic_get_balances",
     "rubic_get_supported_chains",
     "rubic_search_tokens",
     "rubic_quote_routes",
@@ -19,6 +20,7 @@
   "matrix": {
     "evm": {
       "rubic_get_instructions": true,
+      "rubic_get_balances": true,
       "rubic_get_supported_chains": true,
       "rubic_search_tokens": true,
       "rubic_quote_routes": true,
@@ -33,6 +35,7 @@
     },
     "non_evm": {
       "rubic_get_instructions": true,
+      "rubic_get_balances": true,
       "rubic_get_supported_chains": true,
       "rubic_search_tokens": true,
       "rubic_quote_routes": true,

@@ -10,6 +10,7 @@ import { McpErrorMapper } from './shared/error-mapper.js';
 import { McpValidationService } from './shared/validation.service.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
 import { BuildSwapTxTool } from './tools/build-swap-tx.tool.js';
+import { GetBalancesTool } from './tools/get-balances.tool.js';
 import { GetInstructionsTool } from './tools/get-instructions.tool.js';
 import { GetSupportedChainsTool } from './tools/get-supported-chains.tool.js';
 import { GetSwapUrlTool } from './tools/get-swap-url.tool.js';
@@ -27,6 +28,7 @@ const createFactory = (): McpServerFactory => {
     const walletService = new WalletService(config.evmWalletPrivateKey);
 
     const getInstructionsTool = new GetInstructionsTool(errorMapper);
+    const getBalancesTool = new GetBalancesTool(errorMapper, validationService, walletService);
     const getSupportedChainsTool = new GetSupportedChainsTool();
     const searchTokensTool = new SearchTokensTool(errorMapper, apiClient, validationService);
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);
@@ -40,6 +42,7 @@ const createFactory = (): McpServerFactory => {
     return new McpServerFactory(
         walletService,
         getInstructionsTool,
+        getBalancesTool,
         getSupportedChainsTool,
         buildSwapTxTool,
         broadcastTxTool,

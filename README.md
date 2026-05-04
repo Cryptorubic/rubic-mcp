@@ -347,6 +347,7 @@ are available.
 | Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
 |------|:---------------------------------:|-------------|
 | `rubic_get_instructions` | - | Returns Rubic MCP usage guide and workflow tips |
+| `rubic_get_balances` | - | Returns non-zero native and ERC-20 balances across supported EVM chains |
 | `rubic_get_supported_chains` | - | Lists supported blockchain names |
 | `rubic_search_tokens` | - | Searches tokens by symbol, name, or address |
 | `rubic_quote_routes` | - | Calculates best route or all routes |
@@ -369,8 +370,8 @@ Rubic MCP Server does **not**:
   use `rubic_build_swap_tx` to get calldata and sign externally,
   or use `rubic_get_swap_url` for browser-based execution.
 - **Execute limit orders or DCA.** Only market swaps via routing aggregation.
-- **Provide portfolio balances.** Use a dedicated balance-checking tool or
-  block explorer.
+- **Guarantee complete portfolio coverage.** `rubic_get_balances` checks tokens from bundled `tokens.json`.
+  Custom/unlisted tokens may require manual contract checks.
 - **Manage token approvals automatically.** If an ERC-20 approval is needed,
   `rubic_build_swap_tx` returns `approvalAddress` — the user must approve
   separately.

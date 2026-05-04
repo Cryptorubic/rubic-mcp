@@ -111,6 +111,11 @@ export const getSwapUrlInputSchema = {
     dstTokenSymbol: tokenSymbol
 };
 
+export const getBalancesInputSchema = {
+    address: z.string().optional().describe('EVM wallet address to check. Optional when EVM_WALLET_PRIVATE_KEY is configured.'),
+    chainIds: z.array(z.number().int().positive()).optional().describe('Optional filter by EVM chain IDs.')
+};
+
 export const searchTokensValidationSchema = z.looseObject(searchTokensInputSchema);
 export const quoteRoutesValidationSchema = z.looseObject(quoteRoutesInputSchema);
 export const buildSwapTxValidationSchema = z.looseObject(buildSwapTxInputSchema);
@@ -127,6 +132,7 @@ export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema)
     }
 });
 export const getSwapUrlValidationSchema = z.looseObject(getSwapUrlInputSchema);
+export const getBalancesValidationSchema = z.looseObject(getBalancesInputSchema);
 
 export type SearchTokensValidatedInput = z.infer<typeof searchTokensValidationSchema>;
 export type QuoteRoutesValidatedInput = z.infer<typeof quoteRoutesValidationSchema>;
@@ -137,3 +143,4 @@ export type QuoteSwapSignBroadcastValidatedInput = z.infer<typeof quoteSwapSignB
 export type SimulateSwapValidatedInput = z.infer<typeof simulateSwapValidationSchema>;
 export type TrackStatusValidatedInput = z.infer<typeof trackStatusValidationSchema>;
 export type GetSwapUrlValidatedInput = z.infer<typeof getSwapUrlValidationSchema>;
+export type GetBalancesValidatedInput = z.infer<typeof getBalancesValidationSchema>;

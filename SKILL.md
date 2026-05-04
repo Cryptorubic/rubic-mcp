@@ -16,7 +16,7 @@ This MCP server provides a complete flow to:
 This server is non-custodial. Private keys are never transmitted — signing happens
 locally in-process via viem. The Rubic API receives swap parameters and returns
 calldata; it never touches keys. Without `EVM_WALLET_PRIVATE_KEY`, the server runs
-in read-only mode (quotes, search, chain discovery only).
+in read-only mode (quotes, search, chain discovery, balances).
 
 ## Workflow
 
@@ -60,6 +60,13 @@ If `EVM_WALLET_PRIVATE_KEY` is not configured:
 - `rubic_get_supported_chains` returns chain names and chain IDs from Rubic core.
 - Use these values directly in `srcTokenBlockchain` and `dstTokenBlockchain` fields.
 
+### 5. Portfolio balances
+
+- Call `rubic_get_balances` to get non-zero native and ERC-20 balances.
+- `address` is optional when server wallet is configured.
+- Optional `chainIds` narrows checks to selected EVM chains.
+- Token coverage is based on bundled `tokens.json`.
+
 ## Amount and address conventions
 
 - `srcTokenAmount` is a **human-readable decimal string** (for example `"1.5"`).
@@ -76,6 +83,7 @@ are available.
 | Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
 |------|-------------------------------|-------------|
 | `rubic_get_instructions` | No | Returns this guide |
+| `rubic_get_balances` | No* | Check non-zero native and ERC-20 balances across supported EVM chains |
 | `rubic_get_supported_chains` | No | Returns all supported blockchains and chain IDs |
 | `rubic_search_tokens` | No | Search tokens by name, symbol, or address |
 | `rubic_quote_routes` | No | Calculate swap routes (best or all) |
@@ -89,6 +97,7 @@ are available.
 | `rubic_get_swap_url` | No | Generate pre-filled Rubic swap URL |
 
 \* `rubic_build_swap_tx` works without `EVM_WALLET_PRIVATE_KEY`, but then `fromAddress` and `receiver` are required.
+\* `rubic_get_balances` works without `EVM_WALLET_PRIVATE_KEY`, but then `address` is required.
 
 ## Reading route responses
 
@@ -104,7 +113,7 @@ are available.
 - Does not execute limit orders or DCA — market swaps only.
 - Does not run full EVM call/staticcall simulation — `rubic_simulate_swap` provides quote/build-based execution preview only.
 - Does not manage ERC-20 approvals — check `approvalAddress` in build response.
-- Does not provide wallet balances — use a separate balance tool.
+- Does not guarantee complete wallet coverage for custom/unlisted tokens — `rubic_get_balances` checks bundled `tokens.json`.
 - Does not guarantee execution price — quotes are estimates subject to slippage.
 
 ## Common mistakes to avoid

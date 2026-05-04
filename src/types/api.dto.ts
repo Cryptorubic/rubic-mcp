@@ -281,5 +281,7 @@ export interface ChainBalancesDto {
 }
 
 export interface GetBalancesResponseDto {
+    address: string;
     balances: ChainBalancesDto[];
+    summary: string;
 }
