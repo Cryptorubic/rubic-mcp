@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 import { McpToolError } from './result-envelope.js';
 import { McpValidationError } from './validation-error.js';
+import { WalletNotConfiguredError } from './wallet-not-configured.error.js';
 
 export class McpErrorMapper {
     public toToolError(error: unknown): McpToolError {
@@ -16,6 +17,14 @@ export class McpErrorMapper {
 
         if (axios.isAxiosError(error)) {
             return this.mapAxiosError(error);
+        }
+
+        if (error instanceof WalletNotConfiguredError) {
+            return {
+                code: 'WALLET_NOT_CONFIGURED',
+                details: { name: error.name },
+                message: error.message
+            };
         }
 
         if (error instanceof Error) {

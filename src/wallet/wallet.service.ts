@@ -3,6 +3,7 @@ import { viemBlockchainMapping } from '@cryptorubic/web3';
 import { Chain, createPublicClient, createWalletClient, Hex, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { WalletNotConfiguredError } from '../shared/wallet-not-configured.error.js';
 import { BroadcastTxValidatedInput, SignTxValidatedInput } from '../tool-contracts.js';
 import { BroadcastTxResponseDto, SignedTxResponseDto } from '../types/api.dto.js';
 
@@ -113,7 +114,7 @@ export class WalletService {
 
     private getPrivateKey(): Hex {
         if (!this.evmWalletPrivateKey) {
-            throw new Error('EVM_WALLET_PRIVATE_KEY is not configured. Add it to .env to enable signing tools.');
+            throw new WalletNotConfiguredError();
         }
 
         return this.evmWalletPrivateKey;

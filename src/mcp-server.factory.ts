@@ -165,6 +165,20 @@ export class McpServerFactory {
             }
         );
 
+        server.registerTool(
+            BroadcastTxTool.name,
+            {
+                description: 'Broadcast a raw signed EVM transaction to the selected blockchain network.',
+                inputSchema: broadcastTxInputSchema
+            },
+            async (args) => {
+                const result = await this.executeWithTelemetry(BroadcastTxTool.name, () =>
+                    this.broadcastTxTool.execute(args, randomUUID())
+                );
+                return toCallToolResult(result);
+            }
+        );
+
         if (this.walletAddress) {
             server.registerTool(
                 SignTxTool.name,
@@ -174,20 +188,6 @@ export class McpServerFactory {
                 },
                 async (args) => {
                     const result = await this.executeWithTelemetry(SignTxTool.name, () => this.signTxTool.execute(args, randomUUID()));
-                    return toCallToolResult(result);
-                }
-            );
-
-            server.registerTool(
-                BroadcastTxTool.name,
-                {
-                    description: 'Broadcast a raw signed EVM transaction to the selected blockchain network.',
-                    inputSchema: broadcastTxInputSchema
-                },
-                async (args) => {
-                    const result = await this.executeWithTelemetry(BroadcastTxTool.name, () =>
-                        this.broadcastTxTool.execute(args, randomUUID())
-                    );
                     return toCallToolResult(result);
                 }
             );

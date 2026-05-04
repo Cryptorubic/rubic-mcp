@@ -1,7 +1,7 @@
 {
   
   "name": "@cryptorubic/mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Rubic standalone MCP server that proxies to Rubic API v2.",
   "type": "module",
   "bin": {
@@ -11,6 +11,7 @@
   "files": [
     "dist",
     "README.md",
+    "SKILL.md",
     "LICENSE"
   ],
   "publishConfig": {
