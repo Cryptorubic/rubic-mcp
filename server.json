@@ -1,0 +1,125 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.cryptorubic/rubic-mcp",
+  "title": "Rubic MCP",
+  "description": "MCP server for Rubic token swaps, transaction building, signing, broadcasting, and cross-chain status tracking.",
+  "websiteUrl": "https://rubic.exchange",
+  "repository": {
+    "url": "https://github.com/Cryptorubic/rubic-mcp",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@cryptorubic/mcp",
+      "version": "0.1.1",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EVM_WALLET_PRIVATE_KEY",
+          "description": "EVM private key without 0x prefix; required for signing and sign+broadcast tools.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "RUBIC_API_BASE_URL",
+          "description": "Rubic API base URL.",
+          "default": "https://rubic-api-v2.rubic.exchange"
+        },
+        {
+          "name": "TOKENS_API_BASE_URL",
+          "description": "Rubic tokens API base URL.",
+          "default": "https://api.rubic.exchange/api"
+        },
+        {
+          "name": "MCP_TRANSPORT",
+          "description": "Transport mode.",
+          "default": "stdio",
+          "choices": [
+            "stdio",
+            "http"
+          ]
+        },
+        {
+          "name": "MCP_HOST",
+          "description": "Host for HTTP transport mode."
+        },
+        {
+          "name": "MCP_PORT",
+          "description": "Port for HTTP transport mode.",
+          "default": "3333"
+        },
+        {
+          "name": "API_TIMEOUT_MS",
+          "description": "Rubic API request timeout in milliseconds.",
+          "default": "20000"
+        },
+        {
+          "name": "MCP_TOOL_TIMEOUT_MS",
+          "description": "MCP tool timeout in milliseconds.",
+          "default": "30000"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "docker.io/rubicfinance/rubic-mcp:latest",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "node"
+        },
+        {
+          "type": "positional",
+          "value": "dist/index.js"
+        }
+      ],
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "-i"
+        },
+        {
+          "type": "named",
+          "name": "--rm"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "EVM_WALLET_PRIVATE_KEY",
+          "description": "EVM private key without 0x prefix; required for signing and sign+broadcast tools.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "MCP_TRANSPORT",
+          "description": "Transport mode.",
+          "default": "stdio",
+          "choices": [
+            "stdio",
+            "http"
+          ]
+        },
+        {
+          "name": "MCP_PORT",
+          "description": "Port for HTTP transport mode.",
+          "default": "3333"
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://stage-mcp-api-v2.rubic.exchange/mcp"
+    }
+  ]
+}
