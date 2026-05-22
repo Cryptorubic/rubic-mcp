@@ -84,16 +84,25 @@ export class ApiClient {
         });
 
         return response.data.results
-            .map((backendToken) => ({
-                address: backendToken.address,
-                decimals: backendToken.decimals,
-                symbol: backendToken.symbol,
-                name: backendToken.name,
-                blockchain: (backendToken.blockchainNetwork
+            .map((backendToken) => {
+                const blockchain = backendToken.blockchainNetwork
                     ? FROM_BACKEND_BLOCKCHAINS[backendToken.blockchainNetwork]
-                    : backendToken.network)!,
-                price: backendToken.usdPrice
-            }))
+                    : backendToken.network;
+
+                if (!blockchain) {
+                    return null;
+                }
+
+                return {
+                    address: backendToken.address,
+                    decimals: backendToken.decimals,
+                    symbol: backendToken.symbol,
+                    name: backendToken.name,
+                    blockchain,
+                    price: backendToken.usdPrice
+                };
+            })
+            .filter((token) => !!token)
             .slice(0, input.limit ?? 10);
     }
 }
