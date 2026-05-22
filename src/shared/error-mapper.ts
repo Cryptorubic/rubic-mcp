@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 import { McpToolError } from './result-envelope.js';
+import { sanitizeClientErrorMessage } from './sanitize-error-message.js';
 import { McpValidationError } from './validation-error.js';
 import { WalletNotConfiguredError } from './wallet-not-configured.error.js';
 
@@ -31,7 +32,7 @@ export class McpErrorMapper {
             return {
                 code: 'INTERNAL_ERROR',
                 details: { name: error.name },
-                message: error.message || 'Unexpected MCP error.'
+                message: sanitizeClientErrorMessage(error)
             };
         }
 
