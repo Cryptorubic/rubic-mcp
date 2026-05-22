@@ -92,7 +92,7 @@ export class ApiClient {
                 blockchain: (backendToken.blockchainNetwork
                     ? FROM_BACKEND_BLOCKCHAINS[backendToken.blockchainNetwork]
                     : backendToken.network)!,
-                pricate: backendToken.usdPrice
+                price: backendToken.usdPrice
             }))
             .slice(0, input.limit ?? 10);
     }
