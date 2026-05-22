@@ -270,11 +270,19 @@ export class McpServerFactory {
                             };
                         }
 
-                        return this.executeSignAndBroadcastTx({
+                        const broadcastRespose = await this.executeSignAndBroadcastTx({
                             blockchain: swapResult.data.quote.srcTokenBlockchain,
                             fromAddress: swapResult.data.quote.fromAddress,
                             transaction: swapResult.data.transaction
                         });
+
+                        return {
+                            ...broadcastRespose,
+                            data: {
+                                ...broadcastRespose.data,
+                                id: routeId
+                            }
+                        };
                     });
                     return toCallToolResult(result);
                 }
