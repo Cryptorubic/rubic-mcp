@@ -11,7 +11,7 @@ const hasWalletPrivateKey = Boolean(config.evmWalletPrivateKey);
 const tokenAddress = z
     .string()
     .describe(
-        'Token contract address on the selected blockchain. For native chain currency use the zero address 0x0000000000000000000000000000000000000000 (Rubic canonical form).'
+        'Token contract address on the selected blockchain. For native chain currency use the Rubic canonical address for the selected blockchain: EVM and most chains use 0x0000000000000000000000000000000000000000; Solana uses So11111111111111111111111111111111111111111; Sui uses 0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI; Near uses near.'
     );
 const tokenSymbol = z.string().describe('Token symbol (e.g. USDC, USDT, WBTC, etc.).');
 

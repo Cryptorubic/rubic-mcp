@@ -70,8 +70,11 @@ If `EVM_WALLET_PRIVATE_KEY` is not configured:
 ## Amount and address conventions
 
 - `srcTokenAmount` is a **human-readable decimal string** (for example `"1.5"`).
-- For native chain currency, use the Rubic canonical zero address:
-  - `0x0000000000000000000000000000000000000000`
+- For native chain currency, use the Rubic canonical address for the selected blockchain (not always the EVM zero address):
+  - **EVM and most chains**: `0x0000000000000000000000000000000000000000`
+  - **Solana**: `So11111111111111111111111111111111111111111`
+  - **Sui**: `0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI`
+  - **Near**: `near`
 - Gas/value fields inside EVM transaction payloads are wei-denominated strings (returned by tx builders).
 
 ## Tools reference
@@ -121,7 +124,7 @@ are available.
 1. **Skipping token/chain validation**: always resolve chain and token context first.
 2. **Forgetting required addresses**: without `EVM_WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
 3. **Mixing amount formats**: keep `srcTokenAmount` human-readable decimal string.
-4. **Using wrong native token address**: for native token use Rubic zero address.
+4. **Using wrong native token address**: use the Rubic canonical native address for the selected chain (EVM zero address, Solana wrapped SOL mint, Sui `::sui::SUI`, or `near` — see Amount and address conventions).
 
 ## Tips
 
