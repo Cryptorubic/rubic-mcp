@@ -63,8 +63,8 @@ export class ApiClient {
     public async trackStatus(input: TrackStatusValidatedInput): Promise<StatusResponseDto> {
         const response = await this.httpClient.get<StatusResponseDto>(config.rubicApiBaseUrl + '/api/info/statusExtended', {
             params: {
-                ...(input.id ? { id: input.id } : {}),
-                ...(input.srcTxHash ? { srcTxHash: input.srcTxHash } : {})
+                id: input.id,
+                srcTxHash: input.srcTxHash
             }
         });
 

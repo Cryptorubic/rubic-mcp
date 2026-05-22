@@ -99,8 +99,8 @@ export const simulateSwapInputSchema = {
 };
 
 export const trackStatusInputSchema = {
-    id: z.string().optional().describe('Rubic route id from swap response.'),
-    srcTxHash: z.string().optional().describe('Source blockchain transaction hash.')
+    id: z.string().describe('Rubic route id from swap response.'),
+    srcTxHash: z.string().describe('Source blockchain transaction hash.')
 };
 
 export const getSwapUrlInputSchema = {
@@ -123,14 +123,7 @@ export const signTxValidationSchema = z.looseObject(signTxInputSchema);
 export const broadcastTxValidationSchema = z.looseObject(broadcastTxInputSchema);
 export const quoteSwapSignBroadcastValidationSchema = z.looseObject(quoteSwapSignBroadcastInputSchema);
 export const simulateSwapValidationSchema = z.looseObject(simulateSwapInputSchema);
-export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema).superRefine((value, ctx) => {
-    if (!value.id && !value.srcTxHash) {
-        ctx.addIssue({
-            code: 'custom',
-            message: 'Either id or srcTxHash is required.'
-        });
-    }
-});
+export const trackStatusValidationSchema = z.looseObject(trackStatusInputSchema);
 export const getSwapUrlValidationSchema = z.looseObject(getSwapUrlInputSchema);
 export const getBalancesValidationSchema = z.looseObject(getBalancesInputSchema);
 
