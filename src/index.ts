@@ -6,6 +6,7 @@ import { ApiClient } from './api/api-client.js';
 import { config } from './config.js';
 import { startHttpServer } from './http-server.js';
 import { McpServerFactory } from './mcp-server.factory.js';
+import { RpcService } from './services/rpc.service.js';
 import { McpErrorMapper } from './shared/error-mapper.js';
 import { McpValidationService } from './shared/validation.service.js';
 import { BroadcastTxTool } from './tools/broadcast-tx.tool.js';
@@ -25,10 +26,14 @@ const createFactory = (): McpServerFactory => {
     const errorMapper = new McpErrorMapper();
     const validationService = new McpValidationService();
     const apiClient = new ApiClient(config.apiTimeoutMs);
-    const walletService = new WalletService(config.evmWalletPrivateKey);
+    const rpcService = new RpcService();
+
+    rpcService.init();
+
+    const walletService = new WalletService(rpcService, config.evmWalletPrivateKey);
 
     const getInstructionsTool = new GetInstructionsTool(errorMapper);
-    const getBalancesTool = new GetBalancesTool(errorMapper, validationService, walletService);
+    const getBalancesTool = new GetBalancesTool(errorMapper, validationService, rpcService, walletService);
     const getSupportedChainsTool = new GetSupportedChainsTool();
     const searchTokensTool = new SearchTokensTool(errorMapper, apiClient, validationService);
     const quoteRoutesTool = new QuoteRoutesTool(errorMapper, apiClient, validationService);

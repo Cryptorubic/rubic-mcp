@@ -1,8 +1,9 @@
 import { BlockchainName, BlockchainsInfo, EvmBlockchainName } from '@cryptorubic/core';
 import { viemBlockchainMapping } from '@cryptorubic/web3';
-import { Chain, createPublicClient, createWalletClient, Hex, http } from 'viem';
+import { Chain, createPublicClient, createWalletClient, Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { RpcService } from '../services/rpc.service.js';
 import { WalletNotConfiguredError } from '../shared/wallet-not-configured.error.js';
 import { BroadcastTxValidatedInput, SignTxValidatedInput } from '../tool-contracts.js';
 import { BroadcastTxResponseDto, SignedTxResponseDto } from '../types/api.dto.js';
@@ -13,7 +14,10 @@ type FeeParams =
     | { kind: 'none' };
 
 export class WalletService {
-    constructor(private readonly evmWalletPrivateKey?: Hex) {}
+    constructor(
+        private readonly rpcService: RpcService,
+        private readonly evmWalletPrivateKey?: Hex
+    ) {}
 
     public getWalletAddress(): string | undefined {
         return this.evmWalletPrivateKey ? privateKeyToAccount(this.evmWalletPrivateKey).address : undefined;
@@ -25,7 +29,7 @@ export class WalletService {
 
         const account = privateKeyToAccount(privateKey);
         const chain = this.getEvmChain(input.blockchain);
-        const rpcUrl = this.getHttpRpcUrl(chain);
+        const transport = this.rpcService.createHttpTransport(chain);
         const normalizedFromAddress = input.fromAddress?.toLowerCase();
 
         if (normalizedFromAddress && normalizedFromAddress !== account.address.toLowerCase()) {
@@ -34,12 +38,12 @@ export class WalletService {
 
         const publicClient = createPublicClient({
             chain,
-            transport: http(rpcUrl)
+            transport
         });
         const walletClient = createWalletClient({
             account,
             chain,
-            transport: http(rpcUrl)
+            transport
         });
 
         if (input.transaction.chainId !== undefined && input.transaction.chainId !== chain.id) {
@@ -94,10 +98,9 @@ export class WalletService {
         this.ensureEvmBlockchain(input.blockchain);
 
         const chain = this.getEvmChain(input.blockchain);
-        const rpcUrl = this.getHttpRpcUrl(chain);
         const publicClient = createPublicClient({
             chain,
-            transport: http(rpcUrl)
+            transport: this.rpcService.createHttpTransport(chain)
         });
         const signedTransaction = input.signedTransaction.startsWith('0x')
             ? (input.signedTransaction as Hex)
@@ -134,16 +137,6 @@ export class WalletService {
         }
 
         return chain as Chain;
-    }
-
-    private getHttpRpcUrl(chain: Chain): string {
-        const rpcUrl = chain.rpcUrls.default.http?.find((url) => /^https?:\/\//.test(url));
-
-        if (!rpcUrl) {
-            throw new Error(`No HTTP RPC URL found for blockchain ${chain.name}.`);
-        }
-
-        return rpcUrl;
     }
 
     private parseBigInt(value: string | undefined, fieldName: string): bigint | undefined {

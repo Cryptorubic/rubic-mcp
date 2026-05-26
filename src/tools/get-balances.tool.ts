@@ -1,8 +1,10 @@
 import { BLOCKCHAIN_NAME, blockchainId, BlockchainsInfo, EvmBlockchainName } from '@cryptorubic/core';
 import { viemBlockchainMapping } from '@cryptorubic/web3';
-import { Address, Chain, createPublicClient, decodeFunctionResult, encodeFunctionData, http, parseAbi } from 'viem';
+import { Address, Chain, createPublicClient, decodeFunctionResult, encodeFunctionData, parseAbi } from 'viem';
 
 import tokens from '../data/tokens.json' with { type: 'json' };
+import { RpcService } from '../services/rpc.service.js';
+import { chunk } from '../shared/array-utils.js';
 import { McpErrorMapper } from '../shared/error-mapper.js';
 import { McpResultEnvelope } from '../shared/result-envelope.js';
 import { McpValidationService } from '../shared/validation.service.js';
@@ -69,6 +71,7 @@ export class GetBalancesTool {
     constructor(
         private readonly errorMapper: McpErrorMapper,
         private readonly validationService: McpValidationService,
+        private readonly rpcService: RpcService,
         private readonly walletService: WalletService
     ) {}
 
@@ -170,15 +173,14 @@ export class GetBalancesTool {
         }
 
         const chain = viemBlockchainMapping[blockchainName] as Chain | undefined;
-        const rpcUrl = chain?.rpcUrls.default.http?.find((url) => /^https?:\/\//.test(url));
 
-        if (!chain || !rpcUrl) {
+        if (!chain) {
             return null;
         }
 
         const client = createPublicClient({
             chain,
-            transport: http(rpcUrl)
+            transport: this.rpcService.createHttpTransport(chain)
         });
 
         const balances: TokenBalance[] = [];
@@ -209,7 +211,7 @@ export class GetBalancesTool {
             args: [walletAddress]
         });
         const multicallAddress = (MULTICALL_ADDRESSES[chainId] ?? DEFAULT_MULTICALL) as Address;
-        const batches = this.chunk(chainTokens, BATCH_SIZE);
+        const batches = chunk(chainTokens, BATCH_SIZE);
 
         const tokenBatches = await Promise.all(
             batches.map(async (batch) => {
@@ -273,16 +275,6 @@ export class GetBalancesTool {
         }
 
         return balances.length ? { blockchain: blockchainName, tokens: balances } : null;
-    }
-
-    private chunk<T>(items: T[], size: number): T[][] {
-        const chunks: T[][] = [];
-
-        for (let index = 0; index < items.length; index += size) {
-            chunks.push(items.slice(index, index + size));
-        }
-
-        return chunks;
     }
 
     private formatUnits(value: bigint, decimals: number): string {
