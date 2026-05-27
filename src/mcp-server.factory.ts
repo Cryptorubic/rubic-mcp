@@ -292,7 +292,8 @@ export class McpServerFactory {
         server.registerTool(
             TrackStatusTool.name,
             {
-                description: 'Track cross-chain trade status by rubic id and/or source tx hash.',
+                description:
+                    'Track cross-chain trade status by rubic id and/or source tx hash. Cross-chain swaps only — does not work for on-chain (same-chain) swaps.',
                 inputSchema: trackStatusInputSchema
             },
             async (args) => {

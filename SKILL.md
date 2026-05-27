@@ -50,7 +50,12 @@ If `EVM_WALLET_PRIVATE_KEY` is not configured:
 
 ### 3. Tracking swap status
 
-- For tracking swap status, call `rubic_track_status` with:
+**`rubic_track_status` works only for cross-chain swaps.** It does not track on-chain
+(same-chain) swaps — do not call it when `srcTokenBlockchain` and `dstTokenBlockchain`
+are the same. For on-chain swaps, rely on the broadcast result (`txHash`) and a block
+explorer instead.
+
+- For **cross-chain** swaps only, call `rubic_track_status` with:
   - `id` (Rubic route/trade id), and/or
   - `srcTxHash` (source transaction hash).
 - Prefer periodic polling until terminal status is reached.
@@ -96,7 +101,7 @@ are available.
 | `rubic_broadcast_tx` | No | Broadcast raw signed EVM transaction |
 | `rubic_sign_and_broadcast_tx` | Yes | Sign and broadcast in one call |
 | `rubic_quote_swap_sign_and_broadcast_tx` | Yes | All-in-one quote -> build -> sign -> broadcast |
-| `rubic_track_status` | No | Track cross-chain trade status |
+| `rubic_track_status` | No | Track cross-chain trade status only (not on-chain / same-chain swaps) |
 | `rubic_get_swap_url` | No | Generate pre-filled Rubic swap URL |
 
 \* `rubic_build_swap_tx` works without `EVM_WALLET_PRIVATE_KEY`, but then `fromAddress` and `receiver` are required.
@@ -118,6 +123,7 @@ are available.
 - Does not manage ERC-20 approvals — check `approvalAddress` in build response.
 - Does not guarantee complete wallet coverage for custom/unlisted tokens — `rubic_get_balances` checks bundled `tokens.json`.
 - Does not guarantee execution price — quotes are estimates subject to slippage.
+- Does not track on-chain (same-chain) swap status — `rubic_track_status` is cross-chain only.
 
 ## Common mistakes to avoid
 
@@ -125,6 +131,7 @@ are available.
 2. **Forgetting required addresses**: without `EVM_WALLET_PRIVATE_KEY`, pass both `fromAddress` and `receiver`.
 3. **Mixing amount formats**: keep `srcTokenAmount` human-readable decimal string.
 4. **Using wrong native token address**: use the Rubic canonical native address for the selected chain (EVM zero address, Solana wrapped SOL mint, Sui `::sui::SUI`, or `near` — see Amount and address conventions).
+5. **Calling `rubic_track_status` for on-chain swaps**: this tool applies only to cross-chain routes; for same-chain swaps use the transaction hash from broadcast and a block explorer.
 
 ## Tips
 
@@ -133,6 +140,7 @@ are available.
 - Prefer `rubic_quote_swap_sign_and_broadcast_tx` when server wallet is configured.
 - Use step-by-step flow when user needs transaction transparency or external signing.
 - Provide `rubic_get_swap_url` as browser fallback, especially when server wallet is unavailable.
+- Use `rubic_track_status` only after a **cross-chain** swap; for on-chain swaps, confirm completion via `txHash` and a block explorer.
 
 ## Error Codes
 

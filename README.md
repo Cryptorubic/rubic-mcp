@@ -28,6 +28,28 @@ Add to MCP config:
 
 `EVM_WALLET_PRIVATE_KEY` - EVM private key without `0x`. Enables signing/broadcast tools.
 
+## Tools
+
+Tools are split into **read-only** (work without a key) and **execution**
+(require `EVM_WALLET_PRIVATE_KEY`). In [hosted mode](#hosted-mcp), only read-only tools
+are available.
+
+| Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
+|------|:---------------------------------:|-------------|
+| `rubic_get_instructions` | - | Returns Rubic MCP usage guide and workflow tips |
+| `rubic_get_balances` | - | Returns non-zero native and ERC-20 balances across supported EVM chains |
+| `rubic_get_supported_chains` | - | Lists supported blockchain names |
+| `rubic_search_tokens` | - | Searches tokens by symbol, name, or address |
+| `rubic_quote_routes` | - | Calculates best route or all routes |
+| `rubic_simulate_swap` | - | Simulates execution preview (route, fees summary, gas USD, risk level) without signing or broadcasting |
+| `rubic_build_swap_tx` | - | Builds executable swap transaction payload |
+| `rubic_sign_tx` | Yes | Signs EVM transaction payload |
+| `rubic_broadcast_tx` | - | Broadcasts a signed raw transaction |
+| `rubic_sign_and_broadcast_tx` | Yes | Signs and broadcasts in one call |
+| `rubic_quote_swap_sign_and_broadcast_tx` | Yes | Full flow: quote -> build -> sign -> broadcast |
+| `rubic_track_status` | - | Tracks cross-chain status by route id and/or tx hash (cross-chain only; not for on-chain / same-chain swaps) |
+| `rubic_get_swap_url` | - | Generates pre-filled Rubic app swap URL |
+
 ## Local Installation Options
 
 For read-only mode, omit `EVM_WALLET_PRIVATE_KEY`.
@@ -337,28 +359,6 @@ Rubic MCP Server is non-custodial:
   Signing tools return a clear error.
 - **The Rubic API** (`rubic-api-v2.rubic.exchange`) receives swap parameters and
   returns routing + calldata. It never receives your private key.
-
-## Tools
-
-Tools are split into **read-only** (work without a key) and **execution**
-(require `EVM_WALLET_PRIVATE_KEY`). In hosted mode, only read-only tools
-are available.
-
-| Tool | Requires `EVM_WALLET_PRIVATE_KEY` | Description |
-|------|:---------------------------------:|-------------|
-| `rubic_get_instructions` | - | Returns Rubic MCP usage guide and workflow tips |
-| `rubic_get_balances` | - | Returns non-zero native and ERC-20 balances across supported EVM chains |
-| `rubic_get_supported_chains` | - | Lists supported blockchain names |
-| `rubic_search_tokens` | - | Searches tokens by symbol, name, or address |
-| `rubic_quote_routes` | - | Calculates best route or all routes |
-| `rubic_simulate_swap` | - | Simulates execution preview (route, fees summary, gas USD, risk level) without signing or broadcasting |
-| `rubic_build_swap_tx` | - | Builds executable swap transaction payload |
-| `rubic_sign_tx` | Yes | Signs EVM transaction payload |
-| `rubic_broadcast_tx` | - | Broadcasts a signed raw transaction |
-| `rubic_sign_and_broadcast_tx` | Yes | Signs and broadcasts in one call |
-| `rubic_quote_swap_sign_and_broadcast_tx` | Yes | Full flow: quote -> build -> sign -> broadcast |
-| `rubic_track_status` | - | Tracks cross-chain status by route id and/or tx hash |
-| `rubic_get_swap_url` | - | Generates pre-filled Rubic app swap URL |
 
 ## Limitations
 

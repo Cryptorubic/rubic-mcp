@@ -99,8 +99,8 @@ export const simulateSwapInputSchema = {
 };
 
 export const trackStatusInputSchema = {
-    id: z.string().describe('Rubic route id from swap response.'),
-    srcTxHash: z.string().describe('Source blockchain transaction hash.')
+    id: z.string().describe('Rubic route id from a cross-chain swap response. Not used for on-chain (same-chain) swaps.'),
+    srcTxHash: z.string().describe('Source chain transaction hash for a cross-chain swap. Not used for on-chain (same-chain) swaps.')
 };
 
 export const getSwapUrlInputSchema = {

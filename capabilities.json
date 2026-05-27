@@ -212,6 +212,7 @@
   },
   "notes": [
     "Signing and broadcasting are EVM-only, as enforced by wallet service.",
-    "When EVM_WALLET_PRIVATE_KEY is not configured, signing tools are not registered."
+    "When EVM_WALLET_PRIVATE_KEY is not configured, signing tools are not registered.",
+    "rubic_track_status tracks cross-chain swaps only; it does not work for on-chain (same-chain) swaps."
   ]
 }
