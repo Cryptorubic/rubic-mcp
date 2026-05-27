@@ -268,11 +268,11 @@ Use command `node` + args `["/full/path/to/dist/index.js"]`, or Docker command:
 docker run -i --rm -e EVM_WALLET_PRIVATE_KEY=YOUR_PRIVATE_KEY rubicfinance/rubic-mcp:latest node dist/index.js
 ```
 
-## Hosted MCP (Stage)
+## Hosted MCP
 
 Use hosted read-only MCP endpoint:
 
-`https://stage-mcp-api-v2.rubic.exchange/mcp`
+`https://mcp-api-v2.rubic.exchange/mcp`
 
 Example generic MCP config:
 
@@ -280,7 +280,7 @@ Example generic MCP config:
 {
   "mcpServers": {
     "rubic": {
-      "url": "https://stage-mcp-api-v2.rubic.exchange/mcp"
+      "url": "https://mcp-api-v2.rubic.exchange/mcp"
     }
   }
 }
