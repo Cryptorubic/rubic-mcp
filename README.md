@@ -10,6 +10,8 @@ A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for [Ru
 
 ## Quickstart
 
+Requires [Node.js v18+](https://nodejs.org/) installed locally (used by `npx`).
+
 Add to MCP config:
 
 ```json
